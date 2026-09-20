@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block head_extra %}
+{%- if section.generate_feeds %}
+{%- for feed in config.feed_filenames %}
+{{ macros::feed_link(file=feed, href=section.permalink ~ feed, title=section.title) }}
+{%- endfor %}
+{%- endif %}
+{% endblock head_extra %}
+
+{% block main %}
+  {%- set_global brand_is_title = false -%}
+  {% include "partials/header.html" %}
+
+  {%- set_global crumb_titles = [] -%}
+  {%- set_global crumb_urls = [] -%}
+  {%- set_global crumb_current = section.title -%}
+  {% include "partials/crumbs.html" %}
+
+  <h1 class="page-title">{{ section.title }}</h1>
+
+  {#- Paginated: articles come a page at a time, in `paginator.pages`.
+      Not paginated: they're all in `section.pages`. -#}
+  {%- if paginator is defined %}{% set articles = paginator.pages %}{% else %}{% set articles = section.pages %}{% endif %}
+  {%- set date_format = config.extra.date_format | default(value="%Y-%m-%d") %}
+
+  <div class="articles">
+  {%- for article in articles %}
+  {{ macros::article_row(article=article, date_format=date_format, lang=lang) }}
+  {%- endfor %}
+  </div>
+
+  {%- if paginator is defined %}{% include "partials/pager.html" %}{% endif %}
+{% endblock main %}

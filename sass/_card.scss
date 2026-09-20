@@ -44,3 +44,21 @@
 
 .card p { color: var(--ink-dim); }
 .card p strong { color: var(--ink); font-weight: 600; }
+
+/* The one card in the middle of the landing page: the line that says what the
+   software is for, and the two ways into the site under it. */
+.card-hero {
+  margin-top: clamp(2.5rem, 8vh, 4.5rem);
+  text-align: center;
+}
+
+.card-hero .punchline {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.5rem, 1.2rem + 1.6vw, 2.25rem);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.card-hero .actions { justify-content: center; }

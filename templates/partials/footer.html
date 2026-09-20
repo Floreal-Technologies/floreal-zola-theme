@@ -1,11 +1,19 @@
-{#- The foot of every page: who we keep company with, and who took the photo.
+{#- The foot of every page: friends, and the photo credit.
 
-    A site that names no friend and shows no photo has an empty footer, so it
-    gets none: the element carries its own padding, and an empty one would be a
-    band of nothing at the end of the page. -#}
+    With neither, there's no `<footer>` at all: it has its own padding,
+    and an empty one would leave a bare band of space. -#}
 {%- set friends = config.extra.friends | default(value=[]) -%}
 {%- set backdrops = config.extra.backdrops | default(value=[]) -%}
-{%- if friends | length > 0 or backdrops | length > 0 %}
+{#- A photo is credited when [extra.backdrop_credits.<lang>] carries a line for
+    it. One that carries none gets no line, and a foot left with no line and no
+    friend is not drawn at all. -#}
+{%- set_global has_credit = false -%}
+{%- for shot in backdrops -%}
+  {%- if config.extra.backdrop_credits[lang][shot.id] | default(value="") -%}
+    {%- set_global has_credit = true -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if friends | length > 0 or has_credit %}
 <footer>
   {%- if friends | length > 0 %}
   <p class="friends">{{ trans(key="friends", lang=lang) }}
@@ -18,7 +26,10 @@
   </p>
   {%- endif %}
 {%- for shot in backdrops %}
-  <p class="credit" data-for="{{ shot.id }}">{{ trans(key="credit_" ~ shot.id, lang=lang) | safe }}</p>
+  {%- set credit = config.extra.backdrop_credits[lang][shot.id] | default(value="") %}
+  {%- if credit %}
+  <p class="credit" data-for="{{ shot.id }}">{{ credit | safe }}</p>
+  {%- endif %}
 {%- endfor %}
 </footer>
 {%- endif %}

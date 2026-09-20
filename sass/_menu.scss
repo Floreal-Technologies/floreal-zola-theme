@@ -1,9 +1,12 @@
-.themes {
+/* The header drop-downs: the backdrop switcher and, once the script has folded
+   the row of links into one, the language nav. Both are a trigger that opens a
+   panel, so both are drawn by the rules below. */
+.menu {
   position: relative;
   font-size: 0.875rem;
 }
 
-.themes-toggle {
+.menu-toggle {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -18,10 +21,10 @@
   transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
-.themes-toggle:hover { border-color: color-mix(in oklab, var(--ink) 40%, transparent); }
+.menu-toggle:hover { border-color: color-mix(in oklab, var(--ink) 40%, transparent); }
 
 /* The chevron, turned over when the panel is open. */
-.themes-toggle::after {
+.menu-toggle::after {
   content: "";
   width: 0.45em;
   height: 0.45em;
@@ -31,12 +34,31 @@
   transition: transform 0.15s ease;
 }
 
-.themes-toggle[aria-expanded="true"]::after { transform: translateY(0.1em) rotate(-135deg); }
+.menu-toggle[aria-expanded="true"]::after { transform: translateY(0.1em) rotate(-135deg); }
 
-.themes ul {
+/* A glyph on a trigger, painted as a mask so that it takes the colour of the
+   text around it, and with it the palette of each backdrop. */
+.menu-icon {
+  flex: none;
+  width: 1.15em;
+  height: 1.15em;
+  background: currentColor;
+  -webkit-mask: var(--icon) no-repeat center / contain;
+  mask: var(--icon) no-repeat center / contain;
+}
+
+/* The two glyphs a trigger can carry. Each one is a file under `static/icons/`,
+   named here by a URL relative to this stylesheet, which sits beside that
+   folder: a site served from a sub-path therefore finds them too. Each is drawn
+   as a mask over `currentColor`, so the colour inside the file is never seen. */
+.i-palette { --icon: url("icons/palette.svg"); }
+.i-languages { --icon: url("icons/languages.svg"); }
+
+.menu ul {
   position: absolute;
   right: 0;
   z-index: 5;
+  width: max-content;
   min-width: 100%;
   margin: 0.35rem 0 0;
   padding: 0.3rem;
@@ -47,39 +69,53 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
 }
 
-.themes li button {
+/* One entry. The switcher's entries are buttons, which choose; the language
+   nav's are links, which go somewhere. They read the same either way. */
+.menu li button,
+.menu li a {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   width: 100%;
   margin: 0;
-  padding: 0.4rem 0.6rem 0.4rem 0.4rem;
+  padding: 0.4rem 0.6rem;
   border: 0;
   border-radius: 6px;
   background: none;
   color: var(--ink-dim);
   font: inherit;
   text-align: left;
+  text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
 }
 
-.themes li button:hover,
-.themes li button:focus-visible {
+.menu li button:hover,
+.menu li button:focus-visible,
+.menu li a:hover,
+.menu li a:focus-visible {
   background: var(--tint);
   color: var(--ink);
 }
 
-.themes li button::before {
+.menu li button::before,
+.menu li a::before {
   content: "";
-  flex: 0 0 1em;
+  flex: none;
+  width: 1em;
   text-align: center;
   color: var(--accent);
 }
 
-.themes li button:focus-visible { outline: 2px solid var(--sand); outline-offset: -2px; }
+.menu li button:focus-visible,
+.menu li a:focus-visible { outline: 2px solid var(--sand); outline-offset: -2px; }
 
-.themes li button[aria-checked="true"] { color: var(--ink); }
-.themes li button[aria-checked="true"]::before { content: "\2713"; }
+/* The entry the reader is on: the backdrop that is drawn, the language that is
+   read. */
+.menu li button[aria-checked="true"],
+.menu li a[aria-current="true"] { color: var(--ink); }
 
-.themes-toggle:focus-visible { outline: 2px solid var(--sand); outline-offset: 3px; }
+.menu li button[aria-checked="true"]::before,
+.menu li a[aria-current="true"]::before { content: "\2713"; }
+
+.menu-toggle:focus-visible { outline: 2px solid var(--sand); outline-offset: 3px; }

@@ -4,18 +4,22 @@
   {%- set_global brand_is_title = false -%}
   {% include "partials/header.html" %}
 
+  {#- A page that stands on its own: About, Contact, a licence note. Its parent
+      is the landing page, which the first breadcrumb already names, so its
+      crumbs read Home / this page. A page written inside a section names that
+      section between the two. -#}
+  {%- set_global crumb_titles = [] -%}
+  {%- set_global crumb_urls = [] -%}
+  {%- if page.ancestors | length > 1 -%}
   {%- set parent = get_section(path=page.ancestors | last) -%}
   {%- set_global crumb_titles = [parent.title] -%}
   {%- set_global crumb_urls = [parent.permalink] -%}
+  {%- endif %}
   {%- set_global crumb_current = page.title -%}
   {% include "partials/crumbs.html" %}
 
-  <article class="product">
-    {%- set what = page.extra.what | default(value="") -%}
-    {%- if what %}
-    <p class="what">{{ what }}</p>
-    {%- endif %}
-    <h1>{{ page.title }}</h1>
+  <article class="standalone">
+    <h1 class="page-title">{{ page.title }}</h1>
 
     <div class="prose">
       {{ page.content | safe }}

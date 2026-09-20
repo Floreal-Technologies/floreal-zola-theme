@@ -1,0 +1,25 @@
+{#- Every term of one taxonomy. Shared by tags and categories.
+    Zola tries `<taxonomy>/list.html` first: a site can override just one taxonomy there. -#}
+{% extends "base.html" %}
+
+{% block main %}
+  {%- set_global brand_is_title = false -%}
+  {% include "partials/header.html" %}
+
+  {%- set label = macros::taxonomy_label(name=taxonomy.name, lang=lang, extra=config.extra) -%}
+  {%- set_global crumb_titles = [] -%}
+  {%- set_global crumb_urls = [] -%}
+  {%- set_global crumb_current = label -%}
+  {% include "partials/crumbs.html" %}
+
+  <h1 class="page-title">{{ label }}</h1>
+
+  <ul class="terms">
+  {%- for term in terms %}
+    <li>
+      <a class="pill" href="{{ term.permalink | safe }}">{{ term.name }}</a>
+      <span class="term-count">{{ term.page_count }}</span>
+    </li>
+  {%- endfor %}
+  </ul>
+{% endblock main %}

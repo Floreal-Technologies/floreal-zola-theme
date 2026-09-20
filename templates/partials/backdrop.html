@@ -10,9 +10,9 @@
   </picture>
 </div>
 
-{#- Read by floreal.js, so the list of photos is declared once, in config.toml.
-    The URLs are built here rather than in the script: get_url() is the only
-    thing that knows where the site is rooted, and it runs at build time. -#}
+{#- Read by floreal.js: keeps the photo list declared once, in config.toml.
+    URLs are built here, not in the script: only get_url() knows the site's root.
+    It runs at build time, which the script cannot do. -#}
 <script type="application/json" id="backdrops">[
 {%- for shot in config.extra.backdrops %}
   {%- set webp = macros::srcset(shot=shot, ext="webp") -%}

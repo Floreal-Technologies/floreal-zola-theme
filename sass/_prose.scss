@@ -5,13 +5,15 @@
 .prose {
   margin-top: 1rem;
   max-width: 60ch;
-  color: var(--ink-dim);
+  color: var(--ink);
   text-shadow: 0 1px 14px rgba(0, 0, 0, 0.7);
 }
 
 .prose > :first-child { margin-top: 0; }
 .prose p, .prose ul, .prose ol { margin: 0.85rem 0; }
-.prose strong { color: var(--ink); font-weight: 600; }
+.prose strong {
+  font-weight: 600;
+}
 
 .prose h2, .prose h3 {
   margin: 1.75rem 0 0.5rem;
@@ -32,4 +34,5 @@
   font-size: 0.9em;
 }
 
-.product .actions { padding-top: 2rem; }
+.product .actions,
+.standalone .actions { padding-top: 2rem; }

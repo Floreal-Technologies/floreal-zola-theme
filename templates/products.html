@@ -4,7 +4,8 @@
   {%- set_global brand_is_title = false -%}
   {% include "partials/header.html" %}
 
-  {%- set_global crumb_parents = [] -%}
+  {%- set_global crumb_titles = [] -%}
+  {%- set_global crumb_urls = [] -%}
   {%- set_global crumb_current = section.title -%}
   {% include "partials/crumbs.html" %}
 
@@ -12,7 +13,7 @@
 
   <section class="cards" aria-label="{{ section.title }}">
   {%- for product in section.pages %}
-  {{ macros::card(product=product) }}
+  {{ macros::card(product=product, here=current_url) }}
   {%- endfor %}
   </section>
 {% endblock main %}

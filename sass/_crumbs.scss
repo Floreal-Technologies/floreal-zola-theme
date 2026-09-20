@@ -22,7 +22,7 @@
 .crumbs [aria-current="page"] { color: var(--ink); }
 .crumbs .sep { opacity: 0.6; }
 
-.page-title, .product h1 {
+.page-title, .product h1, .article h1 {
   margin: 0.35rem 0 0;
   font-size: clamp(1.7rem, 1.3rem + 1.8vw, 2.5rem);
   font-weight: 600;

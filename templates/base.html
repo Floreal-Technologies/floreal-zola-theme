@@ -1,7 +1,6 @@
 {%- import "macros.html" as macros -%}
-{#- The photo this page ships with: the one `default_backdrop` names, or the
-    first of the list. A site that lists none gets `false`, and every part that
-    draws a backdrop — the palette, the switcher, the picture — is left out. -#}
+{#- The photo this page ships with: `default_backdrop`'s shot, or the list's first.
+    No backdrops configured: `false`, and the palette, switcher and picture are all left out. -#}
 {%- set_global backdrop = false -%}
 {%- if config.extra.backdrops | length > 0 -%}
   {%- set_global backdrop = config.extra.backdrops | first -%}
@@ -20,23 +19,42 @@
 {%- for language in config.extra.languages -%}
   {%- if language.code == lang -%}{%- set_global home_url = get_url(path=language.path, trailing_slash=true) -%}{%- endif -%}
 {%- endfor -%}
+{#- The landing page of a language: the section whose permalink is that language's
+    own root. Every other page — a product, an article, a list, the 404 — is one
+    that is read, and the photo behind it goes soft. -#}
+{%- set_global is_landing = section is defined and section.permalink == home_url -%}
+{#- meta_title and meta_description, read by the title, description and Open Graph tags.
+    Set here because the head renders before a child template's block runs.
+    A taxonomy page has neither `page` nor `section`, so every page kind is checked.
+    The landing page (permalink = home url) keeps the site's own title. -#}
+{%- set_global meta_title = config.title -%}
+{%- set_global meta_description = config.description -%}
+{%- if page is defined -%}
+  {%- set_global meta_title = page.title ~ " — " ~ config.title -%}
+  {%- set_global meta_description = page.description | default(value=config.description) -%}
+{%- elif term is defined -%}
+  {%- set_global meta_title = term.name ~ " — " ~ config.title -%}
+{%- elif taxonomy is defined -%}
+  {%- set tax_label = macros::taxonomy_label(name=taxonomy.name, lang=lang, extra=config.extra) -%}
+  {%- set_global meta_title = tax_label ~ " — " ~ config.title -%}
+{%- elif section is defined and section.permalink != home_url -%}
+  {%- set_global meta_title = section.title ~ " — " ~ config.title -%}
+  {%- set_global meta_description = section.description | default(value=config.description) -%}
+{%- endif -%}
 <!doctype html>
 <html lang="{{ lang }}"{% if backdrop %} data-theme="{{ backdrop.id }}"{% endif %}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-{%- if page is defined %}
-<title>{{ page.title }} — {{ config.title }}</title>
-<meta name="description" content="{{ page.description | default(value=config.description) }}">
-{%- else %}
-<title>{{ config.title }}</title>
-<meta name="description" content="{{ config.description }}">
-{%- endif %}
+<title>{{ meta_title }}</title>
+<meta name="description" content="{{ meta_description }}">
 {%- if current_url is defined %}
 <link rel="canonical" href="{{ current_url | safe }}">
+{%- if translations | length > 0 %}
 {%- for language in config.extra.languages %}
 <link rel="alternate" hreflang="{{ language.code }}" href="{{ macros::lang_url(language=language, translations=translations) }}">
 {%- endfor %}
+{%- endif %}
 {%- endif %}
 {%- if config.extra.favicon %}
 <link rel="icon" href="{{ get_url(path=config.extra.favicon) | safe }}">
@@ -54,16 +72,16 @@ try {
 </script>
 {%- endif %}
 <link rel="stylesheet" href="{{ get_url(path="floreal.css") | safe }}">
+{%- if config.generate_feeds %}
+{%- for feed in config.feed_filenames %}
+{{ macros::feed_link(file=feed, href=get_url(path=feed, lang=lang), title=config.title) }}
+{%- endfor %}
+{%- endif %}
 {%- if config.extra.backdrops | length > 0 %}
-{#- What each photo brings with it: the colours the page is read against, and
-    the credit that names the photographer.
-
-    Both are written here rather than in the stylesheet, because both are keyed
-    by an id the site chose. The stylesheet hides every credit and carries a
-    palette for a page that has no photo at all; these rules are the ones that
-    know a `path` from a `mountains`. Being CSS, they take hold at the moment
-    `data-theme` changes — before the first paint, and on a page that never runs
-    a script. -#}
+{#- Each photo's palette and photographer credit, keyed by the id the site gave it.
+    Written here, not in the stylesheet: only this template knows a `path` from a `mountains`.
+    The stylesheet just hides credits and holds a fallback palette for a page with no photo.
+    As CSS, it takes hold the instant `data-theme` changes: before paint, without a script. -#}
 <style>
 {%- for shot in config.extra.backdrops %}
 {%- set palette = shot.palette | default(value=false) %}
@@ -74,8 +92,8 @@ html[data-theme="{{ shot.id }}"] .credit[data-for="{{ shot.id }}"] { display: bl
 {%- endfor %}
 </style>
 {%- endif %}
-<meta property="og:title" content="{% if page is defined %}{{ page.title }}{% else %}{{ config.title }}{% endif %}">
-<meta property="og:description" content="{% if page is defined %}{{ page.description | default(value=config.description) }}{% else %}{{ config.description }}{% endif %}">
+<meta property="og:title" content="{{ meta_title }}">
+<meta property="og:description" content="{{ meta_description }}">
 <meta property="og:type" content="website">
 {%- if current_url is defined %}
 <meta property="og:url" content="{{ current_url | safe }}">
@@ -85,7 +103,7 @@ html[data-theme="{{ shot.id }}"] .credit[data-for="{{ shot.id }}"] { display: bl
 {%- endif %}
 {%- block head_extra %}{% endblock %}
 </head>
-<body>
+<body{% if is_landing %} class="landing"{% endif %}>
 
 {% if backdrop %}{% include "partials/backdrop.html" %}{% endif -%}
 

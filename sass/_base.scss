@@ -16,6 +16,7 @@ body {
   position: fixed;
   inset: 0;
   z-index: -1;
+  overflow: hidden;
 }
 
 .backdrop img {
@@ -28,6 +29,16 @@ body {
 
 /* Held at 0 while the next backdrop decodes. */
 .backdrop.swapping img { opacity: 0; }
+
+/* Every page but the landing page is one to read, so the photo behind it goes
+   soft and the words come forward. The picture is grown by 8rem and pulled back
+   by 4rem, so the blur's own soft edge falls outside the window. */
+body:not(.landing) .backdrop img {
+  width: calc(100% + 8rem);
+  height: calc(100% + 8rem);
+  margin: -4rem;
+  filter: blur(4px);
+}
 
 .backdrop::after {
   content: "";

@@ -1,23 +1,19 @@
-{#- The srcset of one backdrop, in one format. A shot's `base` is a path under
-    `static/`, so every candidate goes through get_url() and the site works just
-    as well under a sub-path as at the root of a domain. -#}
+{#- One backdrop's srcset, in one format. `base` is a path under `static/`, so each
+    candidate goes through get_url(), and the site works from a sub-path too. -#}
 {% macro srcset(shot, ext) -%}
   {%- for w in shot.widths %}{{ get_url(path=shot.base ~ w ~ "." ~ ext) | safe }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor -%}
 {%- endmacro srcset %}
 
-{#- The one file a browser that knows nothing of srcset is given: the widest, so
-    it matches the intrinsic size the markup declares. -#}
+{#- The file given to a browser that ignores srcset: the widest one.
+    It matches the intrinsic size the markup declares. -#}
 {% macro fallback(shot) -%}
   {%- set widest = shot.widths | last -%}
   {{- get_url(path=shot.base ~ widest ~ ".jpg") | safe -}}
 {%- endmacro fallback %}
 
-{#- Where the other language of the page at hand lives. A page that has not been
-    translated yet sends the reader to the landing page of that language, which is
-    the one URL every language is sure to have.
-
-    Every link a page carries is a full URL, permalink or get_url(), so a site
-    served from a sub-path of a domain reaches its own pages. -#}
+{#- The URL of this page in another language.
+    Untranslated: falls back to that language's landing page, the one URL every language has.
+    Always a full URL (permalink or get_url()), so a site on a sub-path still resolves. -#}
 {% macro lang_url(language, translations) -%}
   {%- set_global found = get_url(path=language.path, trailing_slash=true) -%}
   {%- for other in translations -%}
@@ -26,34 +22,125 @@
   {{- found | safe -}}
 {%- endmacro lang_url %}
 
-{#- One button. `primary` is what makes an action the one the reader is meant to
-    take; there is at most one of those per row. -#}
+{#- Where an action leads. A full URL is used as it stands; one of this site's
+    own pages, `@/some/page.md` or a path, goes through get_url(), so the link
+    holds under a sub-path too. -#}
+{% macro href(action) -%}
+  {%- if action.url is starting_with("@/") or action.url is starting_with("/") -%}
+    {{- get_url(path=action.url) | safe -}}
+  {%- else -%}
+    {{- action.url | safe -}}
+  {%- endif -%}
+{%- endmacro href %}
+
+{#- One button. `primary` marks the action to take; at most one per row. -#}
 {% macro btn(action) -%}
-<a class="btn{% if action.primary %} btn-primary{% endif %}" href="{{ action.url | safe }}">{{ action.label }}</a>
+<a class="btn{% if action.primary %} btn-primary{% endif %}" href="{{ macros::href(action=action) }}">{{ action.label }}</a>
 {%- endmacro btn %}
 
-{#- The row of buttons that closes a card or a product page. A product with no
-    actions gets no row at all. -#}
-{% macro actions(actions) -%}
-{%- if actions | length > 0 %}
+{#- The row of buttons that closes a card or a product page. `where` is the place
+    drawn, "card" or "page"; an action names its place with `where`, and one that
+    says nothing is in both. `here` is the URL of the page the reader is on: the
+    action that leads back to it is dropped, since it goes nowhere. A place left
+    with no action gets no row. -#}
+{% macro actions(actions, where, here="") -%}
+{%- set_global shown = [] -%}
+{%- for action in actions -%}
+  {%- set place = action.where | default(value="both") -%}
+  {%- set target = macros::href(action=action) -%}
+  {%- if (place == where or place == "both") and target != here -%}
+    {%- set_global shown = shown | concat(with=action) -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if shown | length > 0 %}
 <div class="actions">
-  {%- for action in actions %}
+  {%- for action in shown %}
   {{ macros::btn(action=action) }}
   {%- endfor %}
 </div>
 {%- endif %}
 {%- endmacro actions %}
 
-{#- One product, as it appears on the landing page and on the product index. The
-    title is the way in to the product's own page. -#}
-{% macro card(product) -%}
+{#- One product, as it appears on the product index. The title is the way in to
+    the product's own page, and the card draws the actions the product files
+    under "card". `here` is the URL of the page the card sits on, so a card
+    cannot point at that page. -#}
+{% macro card(product, here="") -%}
 {%- set what = product.extra.what | default(value="") -%}
 <article class="card" aria-labelledby="{{ product.slug }}">
   {%- if what %}
   <p class="what">{{ what }}</p>
   {%- endif %}
   <h2 id="{{ product.slug }}"><a href="{{ product.permalink | safe }}">{{ product.title }}</a></h2>
-  {{ product.summary | default(value=product.content) | safe }}
-  {{ macros::actions(actions=product.extra.actions | default(value=[])) }}
+  {% if product.summary %}{{ product.summary | safe }}{% else %}{{ product.content | safe }}{% endif %}
+  {{ macros::actions(actions=product.extra.actions | default(value=[]), where="card", here=here) }}
 </article>
 {%- endmacro card %}
+
+{#- One feed, as the head declares it. The type comes from the file name:
+    `rss.xml` gives RSS, `atom.xml` gives Atom. -#}
+{% macro feed_link(file, href, title) -%}
+<link rel="alternate" type="{% if file is ending_with("atom.xml") %}application/atom+xml{% else %}application/rss+xml{% endif %}" title="{{ title }}" href="{{ href | safe }}">
+{%- endmacro feed_link %}
+
+{#- The name a photo is given in the backdrop switcher: the entry under
+    [extra.backdrop_labels.<lang>]. A photo the table does not name is called
+    by its own id, with dashes and underscores read as spaces: "high-pass"
+    becomes "High Pass". A site can therefore ship a photo and nothing else.
+    `extra` and `lang` are passed in: a macro sees none of the template's context. -#}
+{% macro backdrop_label(id, lang, extra) -%}
+  {%- set human = id | replace(from="-", to=" ") | replace(from="_", to=" ") | title -%}
+  {{- extra.backdrop_labels[lang][id] | default(value=human) -}}
+{%- endmacro backdrop_label %}
+
+{#- The word one header nav entry is given: the entry under
+    [extra.nav_labels.<lang>]. An entry the table does not name is called by
+    its own key, read the same way: "release-notes" becomes "Release Notes". -#}
+{% macro nav_entry_label(key, lang, extra) -%}
+  {%- set human = key | replace(from="-", to=" ") | replace(from="_", to=" ") | title -%}
+  {{- extra.nav_labels[lang][key] | default(value=human) -}}
+{%- endmacro nav_entry_label %}
+
+{#- The name a taxonomy is given on its own pages, in the reader's language:
+    the entry under [extra.taxonomy_labels.<lang>]. A taxonomy the table does
+    not name is written out as it stands, with dashes and underscores read as
+    spaces: "authors" becomes "Authors". A site therefore declares a taxonomy
+    and nothing else, and the pages still build.
+    `extra` and `lang` are passed in: a macro sees none of the template's context. -#}
+{% macro taxonomy_label(name, lang, extra) -%}
+  {%- set human = name | replace(from="-", to=" ") | replace(from="_", to=" ") | title -%}
+  {{- extra.taxonomy_labels[lang][name] | default(value=human) -}}
+{%- endmacro taxonomy_label %}
+
+{#- A page's terms, as pills. `kinds` lists which taxonomies to show, in order.
+    To avoid an empty row, the caller checks first that the page has one.
+    `lang` is passed explicitly: a macro sees none of the template's context. -#}
+{% macro pills(page, kinds, lang) -%}
+<p class="pills">
+  {%- for kind in kinds %}
+  {%- for term in page.taxonomies[kind] | default(value=[]) %}
+  <a class="pill" href="{{ get_taxonomy_url(kind=kind, name=term, lang=lang) | safe }}">{{ term }}</a>
+  {%- endfor %}
+  {%- endfor %}
+</p>
+{%- endmacro pills %}
+
+{#- One article in a list: date, category, title, opening sentences, and tags. -#}
+{% macro article_row(article, date_format, lang) -%}
+<article class="article-row" aria-labelledby="{{ article.slug }}">
+  <p class="meta">
+    <time datetime="{{ article.date }}">{{ article.date | date(format=date_format) }}</time>
+    {%- for term in article.taxonomies.categories | default(value=[]) %}
+    <span class="sep" aria-hidden="true">·</span>
+    <a class="category" href="{{ get_taxonomy_url(kind="categories", name=term, lang=lang) | safe }}">{{ term }}</a>
+    {%- endfor %}
+  </p>
+  <h2 id="{{ article.slug }}"><a href="{{ article.permalink | safe }}">{{ article.title }}</a></h2>
+  {#- An if/else, not `article.summary | default(value=article.content) | safe`: Tera drops
+      `| safe` after `| default`, so an article with no `<!-- more -->` renders escaped. -#}
+  {% if article.summary %}{{ article.summary | safe }}{% else %}{{ article.content | safe }}{% endif %}
+  {%- if article.taxonomies.tags | default(value=[]) | length > 0 %}
+  {{ macros::pills(page=article, kinds=["tags"], lang=lang) }}
+  {%- endif %}
+</article>
+{%- endmacro article_row %}

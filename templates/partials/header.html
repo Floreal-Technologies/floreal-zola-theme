@@ -1,31 +1,41 @@
-{#- The top of every page: the name of the house, the backdrop switcher and the
-    language nav.
+{#- The bar across the top of every page: house name, pages, backdrop switcher,
+    language nav, on one line.
 
-    An include, not a macro, because it calls trans(), which a macro cannot see.
+    An include, not a macro, because it calls trans(), which a macro can't see.
     It expects, from the template that includes it:
       brand_is_title  whether the site name is this page's heading (the landing
-                      page) or a way back to it (everywhere else)
+                      page) or a link back to it (everywhere else)
       home_url        the landing page of this language, set in base.html
       translations    this page's other languages, set in base.html
-      backdrop        the photo the markup shipped with, set in base.html, or
-                      false when the site lists none — then there is nothing to
-                      switch and the switcher is left out -#}
-<header class="brand{% if not brand_is_title %} brand-small{% endif %}">
+      backdrop        the photo the markup shipped with, set in base.html (or
+                      false when the site lists none: the switcher is then left out) -#}
+<header class="brand">
   {%- if brand_is_title %}
   <h1>{{ config.title }}</h1>
   {%- else %}
   <p class="brand-home"><a href="{{ home_url | safe }}">{{ config.title }}</a></p>
   {%- endif %}
   <div class="brand-nav">
+    {%- set nav = config.extra.nav | default(value=[]) -%}
+    {%- if nav | length > 0 %}
+    <nav class="pages" aria-label="{{ trans(key="nav_label", lang=lang) }}">
+      {%- for entry in nav %}
+      {%- set entry_path = entry.path | trim_start_matches(pat="/") %}
+      {%- set target = home_url ~ entry_path %}
+      <a href="{{ target | safe }}"{% if current_url is defined and current_url == target %} aria-current="page"{% elif current_url is defined and current_url is starting_with(target) %} aria-current="true"{% endif %}>{{ macros::nav_entry_label(key=entry.key, lang=lang, extra=config.extra) }}</a>
+      {%- endfor %}
+    </nav>
+    {%- endif %}
     {%- if backdrop %}
-    <nav class="themes" aria-label="{{ trans(key="background_nav", lang=lang) }}" hidden>
-      <button type="button" class="themes-toggle" aria-haspopup="menu" aria-expanded="false" aria-controls="themes-menu">
-        <span class="themes-label">{{ trans(key="backdrop_" ~ backdrop.id, lang=lang) }}</span>
+    <nav class="menu themes" aria-label="{{ trans(key="background_nav", lang=lang) }}" hidden>
+      <button type="button" class="menu-toggle" aria-haspopup="menu" aria-expanded="false" aria-controls="themes-menu">
+        <span class="menu-icon i-palette" aria-hidden="true"></span>
+        <span class="menu-label">{{ macros::backdrop_label(id=backdrop.id, lang=lang, extra=config.extra) }}</span>
       </button>
       <ul id="themes-menu" role="menu" hidden>
         {%- for shot in config.extra.backdrops %}
         <li role="none">
-          <button type="button" role="menuitemradio" tabindex="-1" data-shot="{{ shot.id }}" aria-checked="{{ shot.id == backdrop.id }}">{{ trans(key="backdrop_" ~ shot.id, lang=lang) }}</button>
+          <button type="button" role="menuitemradio" tabindex="-1" data-shot="{{ shot.id }}" aria-checked="{{ shot.id == backdrop.id }}">{{ macros::backdrop_label(id=shot.id, lang=lang, extra=config.extra) }}</button>
         </li>
         {%- endfor %}
       </ul>

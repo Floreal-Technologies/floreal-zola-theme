@@ -1,49 +1,74 @@
-/* Header */
+/* Header: one bar across the top of the page. The house name sits at one end,
+   and the three navs at the other: the pages, the backdrop switcher, the
+   languages. The bar is drawn the way a card is, so the two read as one house.
+   It is raised above the page, or the switcher's panel is painted under what
+   follows it. */
 .brand {
+  position: relative;
+  z-index: 2;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.5rem clamp(0.75rem, 0.5rem + 1vw, 1rem);
   flex-wrap: wrap;
+  padding: 0.6rem clamp(0.75rem, 0.5rem + 1vw, 1.1rem);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  backdrop-filter: blur(10px) saturate(115%);
+  -webkit-backdrop-filter: blur(10px) saturate(115%);
 }
 
-.brand-small { align-items: center; }
-
+/* The name reads the same on every page: the landing page says it as its
+   heading, the others as the way back. */
+.brand h1,
 .brand-home {
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 600;
   letter-spacing: -0.01em;
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.5);
 }
 
 .brand-home a { color: var(--ink); text-decoration-color: var(--accent); }
 
-.brand h1 {
-  margin: 0;
-  font-size: clamp(1.9rem, 1.4rem + 2.2vw, 3rem);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.5);
-}
-
+/* The three navs sit close together: the bar holds them on the house name's own
+   line in every language, and French words are the long ones. */
 .brand-nav {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.35rem;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem clamp(0.6rem, 0.45rem + 0.6vw, 0.9rem);
 }
 
-.langs {
+/* The language nav with no script running: a row of links. The script folds
+   the row into a drop-down and marks the nav `.menu`, which the rules in
+   `_menu.scss` then draw. */
+.langs:not(.menu) {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0.75rem;
   font-size: 0.875rem;
 }
 
-.langs a { color: var(--ink-dim); }
+.langs:not(.menu) a { color: var(--ink-dim); }
 
-.langs [aria-current="true"] {
+.langs:not(.menu) [aria-current="true"] {
+  color: var(--ink);
+  text-decoration-color: var(--accent);
+}
+
+.pages {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.pages a { color: var(--ink-dim); }
+.pages a:hover { color: var(--ink); }
+
+.pages [aria-current="true"] {
   color: var(--ink);
   text-decoration-color: var(--accent);
 }

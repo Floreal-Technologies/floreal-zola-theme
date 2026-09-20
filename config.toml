@@ -1,0 +1,117 @@
+# The demo site the theme serves to itself: `zola serve` at the repo root builds it.
+# No second repository needed to preview a template change.
+# A real site writes its own config.toml and puts the theme under themes/floreal/ (see README).
+base_url = "https://example.org"
+title = "Floréal"
+description = "A house front, and the notes it keeps."
+default_language = "en"
+compile_sass = true
+generate_feeds = true
+build_search_index = false
+
+taxonomies = [
+  { name = "tags", feed = true },
+  { name = "categories", feed = true },
+]
+
+[languages.fr]
+title = "Floréal"
+description = "Une façade, et les notes qu'elle garde."
+generate_feeds = true
+taxonomies = [
+  { name = "tags", feed = true },
+  { name = "categories", feed = true },
+]
+
+[extra]
+# No photograph is kept in this repository, so the demo is read against the
+# palette of :root.
+default_backdrop = ""
+backdrops = []
+date_format = "%Y-%m-%d"
+
+[[extra.languages]]
+code = "en"
+path = "/"
+label = "EN"
+
+[[extra.languages]]
+code = "fr"
+path = "/fr/"
+label = "FR"
+
+[[extra.friends]]
+name = "A House We Keep Company With"
+url = "https://example.com"
+
+[[extra.nav]]
+key = "about"
+path = "about/"
+
+[[extra.nav]]
+key = "blog"
+path = "blog/"
+
+[[extra.nav]]
+key = "tags"
+path = "tags/"
+
+[[extra.nav]]
+key = "categories"
+path = "categories/"
+
+# What each header nav entry is called, per language. A key named nowhere here
+# is written out as it stands: "blog" becomes "Blog".
+[extra.nav_labels.en]
+about = "About"
+blog = "Blog"
+tags = "Tags"
+categories = "Categories"
+
+[extra.nav_labels.fr]
+about = "À propos"
+blog = "Journal"
+tags = "Étiquettes"
+categories = "Catégories"
+
+# What each taxonomy is called, per language. A taxonomy named nowhere here is
+# written out as it stands: "authors" becomes "Authors".
+[extra.taxonomy_labels.en]
+tags = "Tags"
+categories = "Categories"
+
+[extra.taxonomy_labels.fr]
+tags = "Étiquettes"
+categories = "Catégories"
+
+[translations]
+home_label = "Home"
+breadcrumb_nav = "Breadcrumb"
+language_nav = "Language"
+background_nav = "Background"
+friends = "We keep company with"
+not_found = "This page is not here."
+back_home = "Back to the front"
+nav_label = "Pages"
+pagination_nav = "Pages of articles"
+newer = "Newer"
+older = "Older"
+article_nav = "Other articles"
+newer_article = "Newer"
+older_article = "Older"
+
+[languages.fr.translations]
+home_label = "Accueil"
+breadcrumb_nav = "Fil d'Ariane"
+language_nav = "Langue"
+background_nav = "Arrière-plan"
+friends = "Nous accompagnons"
+not_found = "Cette page n'est pas ici."
+back_home = "Retour à la façade"
+nav_label = "Pages"
+pagination_nav = "Pages d'articles"
+newer = "Plus récents"
+older = "Plus anciens"
+article_nav = "Autres articles"
+newer_article = "Plus récent"
+older_article = "Plus ancien"

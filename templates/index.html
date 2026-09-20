@@ -4,21 +4,22 @@
   {%- set_global brand_is_title = true -%}
   {% include "partials/header.html" %}
 
-  {#- The line under the name of the house. A section that gives none is a
-      section that has nothing to say there. -#}
+  {#- The line under the house name. Empty when the section sets none. -#}
   {%- set tagline = section.extra.tagline | default(value="") -%}
   {%- if tagline %}
   <p class="tagline">{{ tagline }}</p>
   {%- endif %}
 
-  {#- Which products the landing page shows, and in what order. The list is the
-      landing page's own; `/products/` lists them all by itself. -#}
-  {%- set products = section.extra.products | default(value=[]) -%}
-  {%- if products | length > 0 %}
-  <section class="cards" aria-label="{{ trans(key="products_label", lang=lang) }}">
-  {%- for path in products %}
-  {{ macros::card(product=get_page(path=path)) }}
-  {%- endfor %}
-  </section>
+  {#- The middle of the page: one card that says what the software is for, and
+      the buttons that lead into the site. Both come from the landing page's own
+      front matter, under `extra.hero`; a landing page that writes none gets no
+      card. The buttons are the ones a card draws, so `where = "page"` keeps an
+      action off this one. -#}
+  {%- set hero = section.extra.hero | default(value=false) -%}
+  {%- if hero %}
+  <article class="card card-hero">
+    <p class="punchline">{{ hero.punchline }}</p>
+    {{ macros::actions(actions=hero.actions | default(value=[]), where="card", here=current_url) }}
+  </article>
   {%- endif %}
 {% endblock main %}
