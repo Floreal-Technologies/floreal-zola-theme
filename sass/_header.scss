@@ -1,3 +1,5 @@
+@use "vars";
+
 /* Header: one bar across the top of the page. The house name sits at one end,
    and the three navs at the other: the pages, the backdrop switcher, the
    languages. The bar is drawn the way a card is, so the two read as one house.
@@ -12,11 +14,7 @@
   gap: 0.5rem clamp(0.75rem, 0.5rem + 1vw, 1rem);
   flex-wrap: wrap;
   padding: 0.6rem clamp(0.75rem, 0.5rem + 1vw, 1.1rem);
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  backdrop-filter: blur(10px) saturate(115%);
-  -webkit-backdrop-filter: blur(10px) saturate(115%);
+  @include vars.panel;
 }
 
 /* The name reads the same on every page: the landing page says it as its
@@ -40,23 +38,6 @@
   gap: 0.5rem clamp(0.6rem, 0.45rem + 0.6vw, 0.9rem);
 }
 
-/* The language nav with no script running: a row of links. The script folds
-   the row into a drop-down and marks the nav `.menu`, which the rules in
-   `_menu.scss` then draw. */
-.langs:not(.menu) {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 0.875rem;
-}
-
-.langs:not(.menu) a { color: var(--ink-dim); }
-
-.langs:not(.menu) [aria-current="true"] {
-  color: var(--ink);
-  text-decoration-color: var(--accent);
-}
-
 .pages {
   display: flex;
   align-items: center;
@@ -68,7 +49,9 @@
 .pages a { color: var(--ink-dim); }
 .pages a:hover { color: var(--ink); }
 
-.pages [aria-current="true"] {
+/* The page the reader is on, and the section it sits in: `aria-current="page"`
+   for the one, `"true"` for the other, and the same mark for both. */
+.pages [aria-current] {
   color: var(--ink);
   text-decoration-color: var(--accent);
 }

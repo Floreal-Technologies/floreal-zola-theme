@@ -18,23 +18,28 @@
   font-size: clamp(1.3rem, 1.15rem + 0.8vw, 1.65rem);
   font-weight: 600;
   letter-spacing: -0.01em;
-  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.55);
+  text-shadow: var(--title-glow);
 }
 
+.article-row h2 a { color: var(--ink); }
+
+/* The one way in a card or an article row offers: underlined only under the
+   pointer, so a list of them reads as a list and not as a page of links. */
+.card h2 a,
 .article-row h2 a {
-  color: var(--ink);
   text-decoration: underline;
   text-decoration-color: transparent;
   text-underline-offset: 4px;
   transition: text-decoration-color 0.15s ease;
 }
 
+.card h2 a:hover,
 .article-row h2 a:hover { text-decoration-color: var(--accent); }
 
 .article-row > p:not(.meta):not(.pills) {
   color: var(--ink-dim);
-  max-width: 60ch;
-  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.7);
+  max-width: var(--measure);
+  text-shadow: var(--text-glow);
 }
 
 /* The day, and what the article is filed under. */
@@ -51,7 +56,6 @@
 }
 
 .meta .category { color: var(--accent); text-decoration: none; }
-.meta .sep { opacity: 0.6; }
 
 /* One term, wherever a term is shown. */
 .pills {

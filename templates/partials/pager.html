@@ -1,20 +1,20 @@
-{#- The newer and older links under a list that runs to more than one page.
+{#- The newer and older links under a list of more than one page.
 
-    An include, not a macro, because it calls trans(). It expects:
-      paginator  the page of articles Zola built this page from
+    It is an include, not a component, because it reads `paginator` from the
+    template.
 
-    `previous` is the page of newer articles, because the section is sorted
-    newest first. -#}
+    `previous` is the page of newer articles, because the section sorts newest
+    first. -#}
 {%- if paginator.previous or paginator.next %}
-<nav class="pager" aria-label="{{ trans(key="pagination_nav", lang=lang) }}">
+<nav class="pager" aria-label="{{ <floreal.t key="pagination_nav" /> }}">
   {%- if paginator.previous %}
-  <a class="pager-newer" href="{{ paginator.previous | safe }}">{{ trans(key="newer", lang=lang) }}</a>
+  <a class="pager-newer" href="{{ paginator.previous | safe }}">{{ <floreal.t key="newer" /> }}</a>
   {%- else %}
   <span></span>
   {%- endif %}
   <span class="pager-count">{{ paginator.current_index }} / {{ paginator.number_pagers }}</span>
   {%- if paginator.next %}
-  <a class="pager-older" href="{{ paginator.next | safe }}">{{ trans(key="older", lang=lang) }}</a>
+  <a class="pager-older" href="{{ paginator.next | safe }}">{{ <floreal.t key="older" /> }}</a>
   {%- else %}
   <span></span>
   {%- endif %}

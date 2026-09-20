@@ -1,3 +1,5 @@
+@use "vars";
+
 * { box-sizing: border-box; }
 
 html { -webkit-text-size-adjust: 100%; }
@@ -31,13 +33,14 @@ body {
 .backdrop.swapping img { opacity: 0; }
 
 /* Every page but the landing page is one to read, so the photo behind it goes
-   soft and the words come forward. The picture is grown by 8rem and pulled back
-   by 4rem, so the blur's own soft edge falls outside the window. */
+   soft and the words come forward. The picture is grown by twice the blur and
+   pulled back by it, so the blur's own soft edge falls outside the window.
+   A site that wants a sharp photo behind an article sets `--backdrop-blur: 0`. */
 body:not(.landing) .backdrop img {
-  width: calc(100% + 8rem);
-  height: calc(100% + 8rem);
-  margin: -4rem;
-  filter: blur(4px);
+  width: calc(100% + 32 * var(--backdrop-blur));
+  height: calc(100% + 32 * var(--backdrop-blur));
+  margin: calc(-16 * var(--backdrop-blur));
+  filter: blur(var(--backdrop-blur));
 }
 
 .backdrop::after {
@@ -50,24 +53,27 @@ body:not(.landing) .backdrop img {
 .page {
   flex: 1 0 auto;
   width: 100%;
-  max-width: 46rem;
+  max-width: vars.$column;
   margin: 0 auto;
   padding: clamp(2.5rem, 8vh, 5rem) 1rem 2rem;
 }
 
 a { color: var(--accent); }
-a:focus-visible { outline: 2px solid var(--sand); outline-offset: 3px; border-radius: 4px; }
+a:focus-visible { outline: var(--focus-ring); outline-offset: 3px; border-radius: 4px; }
+
+/* Whatever stands between two things that are read as one line. */
+.sep { opacity: 0.6; }
 
 .tagline {
   margin: 1rem 0 0;
   font-size: clamp(1.1rem, 1rem + 0.6vw, 1.4rem);
   color: var(--ink);
-  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.65);
+  text-shadow: var(--text-glow);
 }
 
 .lede {
   margin: 0.75rem 0 0;
   color: var(--ink-dim);
-  max-width: 60ch;
-  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.7);
+  max-width: var(--measure);
+  text-shadow: var(--text-glow);
 }

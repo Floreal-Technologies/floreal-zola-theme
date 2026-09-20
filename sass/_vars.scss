@@ -1,0 +1,14 @@
+/* The two values the stylesheet needs before a browser reads it: the column's
+   width, which is also the width the layout narrows at, and the panel every
+   raised surface is drawn as. A custom property cannot serve either — a media
+   query cannot read one, and a mixin keeps the rule in one place while each
+   component keeps its own file. */
+$column: 46rem;
+
+@mixin panel {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  backdrop-filter: blur(10px) saturate(115%);
+  -webkit-backdrop-filter: blur(10px) saturate(115%);
+}

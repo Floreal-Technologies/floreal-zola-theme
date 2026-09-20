@@ -1,23 +1,40 @@
+{#- The backdrop behind the page.
+
+    On the landing page it is the image itself. The browser gets it first, at
+    the width of the window.
+
+    On every other page the stylesheet blurs it and grows it past the edges.
+    Half that width is then more than the reader can see.
+
+    The words must arrive first there, so the image asks for the smaller
+    width. -#}
+{%- if is_landing -%}
+  {%- set sizes = "100vw" -%}
+{%- else -%}
+  {%- set sizes = "50vw" -%}
+{%- endif -%}
 <div class="backdrop" data-shot="{{ backdrop.id }}">
   <picture>
     <source type="image/webp"
-            srcset="{{ macros::srcset(shot=backdrop, ext="webp") }}"
-            sizes="100vw">
-    <img src="{{ macros::fallback(shot=backdrop) }}"
-         srcset="{{ macros::srcset(shot=backdrop, ext="jpg") }}"
-         sizes="100vw" width="{{ backdrop.width }}" height="{{ backdrop.height }}"
-         alt="" fetchpriority="high" decoding="async">
+            srcset="{{ <floreal.srcset shot={backdrop} ext="webp" /> }}"
+            sizes="{{ sizes }}">
+    <img src="{{ <floreal.fallback shot={backdrop} /> }}"
+         srcset="{{ <floreal.srcset shot={backdrop} ext="jpg" /> }}"
+         sizes="{{ sizes }}" width="{{ backdrop.width }}" height="{{ backdrop.height }}"
+         alt=""{% if is_landing %} fetchpriority="high"{% endif %} decoding="async">
   </picture>
 </div>
 
-{#- Read by floreal.js: keeps the photo list declared once, in config.toml.
-    URLs are built here, not in the script: only get_url() knows the site's root.
-    It runs at build time, which the script cannot do. -#}
+{#- Read by floreal.js. It keeps the backdrop list declared once, in
+    config.toml.
+
+    The URLs are built here, not in the script, because only get_url() knows
+    the root of the site. It runs at build time. -#}
 <script type="application/json" id="backdrops">[
 {%- for shot in config.extra.backdrops %}
-  {%- set webp = macros::srcset(shot=shot, ext="webp") -%}
-  {%- set jpg = macros::srcset(shot=shot, ext="jpg") -%}
-  {%- set src = macros::fallback(shot=shot) -%}
+  {%- set webp = <floreal.srcset shot={shot} ext="webp" /> -%}
+  {%- set jpg = <floreal.srcset shot={shot} ext="jpg" /> -%}
+  {%- set src = <floreal.fallback shot={shot} /> -%}
   {"id": {{ shot.id | json_encode | safe }}, "webp": {{ webp | json_encode | safe }}, "jpg": {{ jpg | json_encode | safe }}, "src": {{ src | json_encode | safe }}, "width": {{ shot.width }}, "height": {{ shot.height }}}{% if not loop.last %},{% endif %}
 {%- endfor %}
 ]</script>

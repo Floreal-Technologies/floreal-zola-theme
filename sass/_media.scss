@@ -1,15 +1,19 @@
+@use "vars";
+
 @media (prefers-reduced-motion: reduce) {
   .backdrop img { transition: none; }
   .menu-toggle, .menu-toggle::after { transition: none; }
   .card h2 a, .article-row h2 a { transition: none; }
 }
 
+/* The header bar and a card are the same panel, so they give up the same blur. */
 @media (prefers-reduced-transparency: reduce) {
-  .card { backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--card-solid); }
+  .card, .brand { backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--card-solid); }
   .menu ul { background: var(--bg); }
 }
 
-@media (max-width: 46rem) {
+/* Narrower than the column: the trigger keeps its glyph and gives up its word. */
+@media (max-width: vars.$column) {
   .menu-label {
     position: absolute;
     width: 1px;

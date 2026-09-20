@@ -1,0 +1,13 @@
+{#- An article list, and the newer and older links under it when the list runs
+    to more than one page.
+
+    It expects `articles`. The date format, the language and the two taxonomy
+    lists reach the rows from base.html, as implicit parameters. -#}
+<div class="articles">
+{%- for article in articles %}
+{{ <floreal.article_row article={article} /> }}
+{%- endfor %}
+</div>
+{%- if paginator is defined %}
+{% include "partials/pager.html" %}
+{%- endif %}

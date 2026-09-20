@@ -1,30 +1,59 @@
+{#- Every page: an article, a product or a standalone page. Zola selects this
+    template itself, so no section names a `page_template`.
+
+    A date makes a page an article: the date, its terms, and the article on
+    each side.
+
+    `extra.what` makes it a product: the line that says what the product is,
+    and the buttons. A page with neither is standalone. -#}
 {% extends "base.html" %}
 
 {% block main %}
-  {%- set_global brand_is_title = false -%}
-  {% include "partials/header.html" %}
-
-  {#- A page that stands on its own: About, Contact, a licence note. Its parent
-      is the landing page, which the first breadcrumb already names, so its
-      crumbs read Home / this page. A page written inside a section names that
-      section between the two. -#}
-  {%- set_global crumb_titles = [] -%}
-  {%- set_global crumb_urls = [] -%}
-  {%- if page.ancestors | length > 1 -%}
-  {%- set parent = get_section(path=page.ancestors | last) -%}
-  {%- set_global crumb_titles = [parent.title] -%}
-  {%- set_global crumb_urls = [parent.permalink] -%}
+  {%- set_global what = page.extra?.what or "" -%}
+  {%- if page.date -%}
+    {%- set_global kind = "article" -%}
+  {%- elif what -%}
+    {%- set_global kind = "product" -%}
+  {%- else -%}
+    {%- set_global kind = "standalone" -%}
   {%- endif %}
-  {%- set_global crumb_current = page.title -%}
-  {% include "partials/crumbs.html" %}
-
-  <article class="standalone">
-    <h1 class="page-title">{{ page.title }}</h1>
+  <article class="{{ kind }}">
+    {%- if kind == "article" and page.taxonomies | length > 0 %}
+    {{ <floreal.pills page={page} kinds={[tax.name for tax in config.taxonomies]} /> }}
+    {%- endif %}
+    {%- if what %}
+    <p class="what">{{ what }}</p>
+    {%- endif %}
+    <h1{% if kind == "standalone" %} class="page-title"{% endif %}>{{ page.title }}</h1>
+    {%- if kind == "article" %}
+    <p class="meta"><time datetime="{{ page.date }}">{{ page.date | date(format=date_format) }}</time></p>
+    {%- endif %}
 
     <div class="prose">
       {{ page.content | safe }}
     </div>
 
-    {{ macros::actions(actions=page.extra.actions | default(value=[]), where="page", here=current_url) }}
+    {%- if kind == "article" %}
+    {#- The article on each side. `lower` is above this one in section order,
+        which is the newer article under `sort_by = "date"`. -#}
+    {%- if page.lower or page.higher %}
+    <nav class="article-nav" aria-label="{{ <floreal.t key="article_nav" /> }}">
+      {%- if page.lower %}
+      <a class="to-newer" href="{{ page.lower.permalink | safe }}">
+        <span class="direction">{{ <floreal.t key="newer_article" /> }}</span>
+        <span class="to-title">{{ page.lower.title }}</span>
+      </a>
+      {%- endif %}
+      {%- if page.higher %}
+      <a class="to-older" href="{{ page.higher.permalink | safe }}">
+        <span class="direction">{{ <floreal.t key="older_article" /> }}</span>
+        <span class="to-title">{{ page.higher.title }}</span>
+      </a>
+      {%- endif %}
+    </nav>
+    {%- endif %}
+    {%- else %}
+    {{ <floreal.actions actions={page.extra?.actions or []} where="page" here={current_url} /> }}
+    {%- endif %}
   </article>
 {% endblock main %}

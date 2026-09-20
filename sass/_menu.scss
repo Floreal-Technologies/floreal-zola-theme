@@ -66,7 +66,7 @@
   background: var(--card-solid);
   border: 1px solid var(--line);
   border-radius: 10px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  box-shadow: var(--panel-shadow);
 }
 
 /* One entry. The switcher's entries are buttons, which choose; the language
@@ -108,7 +108,7 @@
 }
 
 .menu li button:focus-visible,
-.menu li a:focus-visible { outline: 2px solid var(--sand); outline-offset: -2px; }
+.menu li a:focus-visible { outline: var(--focus-ring); outline-offset: -2px; }
 
 /* The entry the reader is on: the backdrop that is drawn, the language that is
    read. */
@@ -118,4 +118,27 @@
 .menu li button[aria-checked="true"]::before,
 .menu li a[aria-current="true"]::before { content: "\2713"; }
 
-.menu-toggle:focus-visible { outline: 2px solid var(--sand); outline-offset: 3px; }
+.menu-toggle:focus-visible { outline: var(--focus-ring); outline-offset: 3px; }
+
+/* With no script running there is nothing to swap a photograph with, so the
+   switcher is not drawn at all; the languages are still links, so the panel is
+   laid back out as the plain row it would have been. The page marks itself
+   `.js` in the head, before paint, so neither drop-down is ever seen changing
+   shape. */
+html:not(.js) .themes { display: none; }
+
+html:not(.js) .langs .menu-toggle { display: none; }
+
+html:not(.js) .langs ul[hidden] {
+  display: flex;
+  position: static;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  box-shadow: none;
+}
+
+html:not(.js) .langs li a { width: auto; padding: 0; }
+html:not(.js) .langs li a::before { content: none; }

@@ -1,17 +1,16 @@
 {#- Home / Blog / <this page>.
 
-    An include, not a macro, because it calls trans(). It expects:
-      crumb_titles  the names of the steps between Home and this page, in order
-      crumb_urls    their URLs, in the same order
-      crumb_current the name of this page, which is said but not linked
-      home_url      the landing page of this language, set in base.html
+    base.html includes it on every page except the landing page and the 404
+    page, from the `crumb_*` globals that it sets.
 
-    Two lists, not a list of sections: a taxonomy page has no section.
-    Its parent is a name from trans() and a URL from get_url(). -#}
-<nav class="crumbs" aria-label="{{ trans(key="breadcrumb_nav", lang=lang) }}">
+    A template that a site writes itself therefore also gets breadcrumbs.
+
+    Two lists, not a list of sections, because a taxonomy page has no section.
+    Its parent is a name from [extra.labels] and a URL from get_url(). -#}
+<nav class="crumbs" aria-label="{{ <floreal.t key="breadcrumb_nav" /> }}">
   <ol>
     <li>
-      <a href="{{ home_url | safe }}">{{ trans(key="home_label", lang=lang) }}</a>
+      <a href="{{ home_url | safe }}">{{ <floreal.t key="home_label" /> }}</a>
       <span class="sep" aria-hidden="true">/</span>
     </li>
     {%- for title in crumb_titles %}

@@ -1,14 +1,17 @@
-{#- The bar across the top of every page: house name, pages, backdrop switcher,
-    language nav, on one line.
+{#- The bar across the top of every page: site name, pages, backdrop switcher
+    and language nav, on one line.
 
-    An include, not a macro, because it calls trans(), which a macro can't see.
-    It expects, from the template that includes it:
-      brand_is_title  whether the site name is this page's heading (the landing
-                      page) or a link back to it (everywhere else)
-      home_url        the landing page of this language, set in base.html
-      translations    this page's other languages, set in base.html
-      backdrop        the photo the markup shipped with, set in base.html (or
-                      false when the site lists none: the switcher is then left out) -#}
+    base.html includes it before the block of the page, so a template that a
+    site writes itself also carries the bar.
+
+    It reads what base.html set: `brand_is_title`, `home_url`, `translations`,
+    `lang_codes` and `backdrop`.
+
+    Both drop-downs ship closed and complete. A reader with no script gets the
+    `html:not(.js)` rules of the stylesheet instead.
+
+    Those rules show the languages as a plain row and no switcher, because the
+    script does the backdrop switch. -#}
 <header class="brand">
   {%- if brand_is_title %}
   <h1>{{ config.title }}</h1>
@@ -16,35 +19,45 @@
   <p class="brand-home"><a href="{{ home_url | safe }}">{{ config.title }}</a></p>
   {%- endif %}
   <div class="brand-nav">
-    {%- set nav = config.extra.nav | default(value=[]) -%}
+    {%- set nav = config.extra.nav or [] -%}
     {%- if nav | length > 0 %}
-    <nav class="pages" aria-label="{{ trans(key="nav_label", lang=lang) }}">
+    <nav class="pages" aria-label="{{ <floreal.t key="nav_label" /> }}">
       {%- for entry in nav %}
-      {%- set entry_path = entry.path | trim_start_matches(pat="/") %}
-      {%- set target = home_url ~ entry_path %}
-      <a href="{{ target | safe }}"{% if current_url is defined and current_url == target %} aria-current="page"{% elif current_url is defined and current_url is starting_with(target) %} aria-current="true"{% endif %}>{{ macros::nav_entry_label(key=entry.key, lang=lang, extra=config.extra) }}</a>
+      {%- set key = <floreal.nav_key path={entry.path} /> %}
+      {%- set target = <floreal.nav_url path={entry.path} home_url={home_url} /> %}
+      <a href="{{ target | safe }}"{% if current_url is defined and current_url is starting_with(pat=target) %} aria-current="{% if current_url == target %}page{% else %}true{% endif %}"{% endif %}>{{ <floreal.label key={key} /> }}</a>
       {%- endfor %}
     </nav>
     {%- endif %}
     {%- if backdrop %}
-    <nav class="menu themes" aria-label="{{ trans(key="background_nav", lang=lang) }}" hidden>
+    <nav class="menu themes" aria-label="{{ <floreal.t key="background_nav" /> }}">
       <button type="button" class="menu-toggle" aria-haspopup="menu" aria-expanded="false" aria-controls="themes-menu">
         <span class="menu-icon i-palette" aria-hidden="true"></span>
-        <span class="menu-label">{{ macros::backdrop_label(id=backdrop.id, lang=lang, extra=config.extra) }}</span>
+        <span class="menu-label">{{ <floreal.label key={backdrop.id} /> }}</span>
       </button>
       <ul id="themes-menu" role="menu" hidden>
         {%- for shot in config.extra.backdrops %}
         <li role="none">
-          <button type="button" role="menuitemradio" tabindex="-1" data-shot="{{ shot.id }}" aria-checked="{{ shot.id == backdrop.id }}">{{ macros::backdrop_label(id=shot.id, lang=lang, extra=config.extra) }}</button>
+          <button type="button" role="menuitemradio" tabindex="-1" data-shot="{{ shot.id }}" aria-checked="{{ shot.id == backdrop.id }}">{{ <floreal.label key={shot.id} /> }}</button>
         </li>
         {%- endfor %}
       </ul>
     </nav>
     {%- endif %}
-    <nav class="langs" aria-label="{{ trans(key="language_nav", lang=lang) }}">
-      {%- for language in config.extra.languages %}
-      <a href="{{ macros::lang_url(language=language, translations=translations) }}"{% if language.code == lang %} aria-current="true"{% endif %} hreflang="{{ language.code }}">{{ language.label }}</a>
-      {%- endfor %}
+    {%- if lang_codes | length > 1 %}
+    <nav class="menu langs" aria-label="{{ <floreal.t key="language_nav" /> }}">
+      <button type="button" class="menu-toggle" aria-haspopup="menu" aria-expanded="false" aria-controls="langs-menu">
+        <span class="menu-icon i-languages" aria-hidden="true"></span>
+        <span class="menu-label">{{ <floreal.lang_label code={lang} /> }}</span>
+      </button>
+      <ul id="langs-menu" role="menu" hidden>
+        {%- for code in lang_codes %}
+        <li role="none">
+          <a role="menuitem" tabindex="-1" href="{{ <floreal.lang_url code={code} translations={translations} /> }}"{% if code == lang %} aria-current="true"{% endif %} hreflang="{{ code }}">{{ <floreal.lang_label code={code} /> }}</a>
+        </li>
+        {%- endfor %}
+      </ul>
     </nav>
+    {%- endif %}
   </div>
 </header>

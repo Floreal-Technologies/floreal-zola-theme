@@ -1,55 +1,46 @@
 name = "Floréal"
-description = "A house front and the notes it keeps: a full-bleed photographic backdrop the reader can switch, a header bar that carries the pages, a landing card that says what the software is for, products, a blog, and two languages side by side."
+description = "A theme with a full-bleed backdrop that the reader can switch, a header bar with the pages, a landing card, products, a blog, and any number of languages."
 license = "GPL-3.0-only"
 homepage = "https://github.com/Floreal-Technologies/floreal-technologies.github.io"
-min_version = "0.22.0"
+min_version = "0.23.0"
 demo = "https://floreal.tech"
 
 [author]
 name = "Floréal Technologies"
 homepage = "https://floreal.tech"
 
-# The [extra] keys the theme reads, with their defaults. Zola merges this
-# table under the site's own [extra], so a site names only what it changes.
-# See README.md, "Configuration", for the long form.
-#
-# - default_backdrop: id of the photo a page ships with. "" picks the first
-#   of backdrops.
-# - backdrops: the switcher's photos. Each entry: id, base (path under
-#   static/, no leading slash), widths, width, height, and an optional
-#   [extra.backdrops.palette] table (ink, ink-dim, line, tint, card,
-#   card-solid, accent, sand, sand-lift, on-sand, bg, focus-pos, scrim).
-#   Empty list: no photo, no switcher, palette of :root.
-# - backdrop_labels: what each photo is called in the switcher, per language:
-#   [extra.backdrop_labels.<lang>] with one entry per backdrop id. A photo
-#   named nowhere there is called by its own id, with dashes and underscores
-#   read as spaces.
-# - backdrop_credits: the line that names one photographer, per language:
-#   [extra.backdrop_credits.<lang>] with one entry per backdrop id. HTML is
-#   written out as it stands. A photo with no line is not credited, and a foot
-#   with no line and no friend is not drawn.
-# - friends: the footer links. Each entry: name, url.
-# - nav: the pages linked from the header, beside the language nav. Each
-#   entry: key, path.
-# - nav_labels: the word each nav entry is given, per language:
-#   [extra.nav_labels.<lang>] with one entry per nav key. A key named nowhere
-#   there is read the same way a backdrop id is.
-# - taxonomy_labels: what a taxonomy is called on its list page, its term pages
-#   and in their breadcrumbs, per language:
-#   [extra.taxonomy_labels.<lang>] with one entry per taxonomy name. A taxonomy
-#   the table does not name is written out as it stands, with dashes and
-#   underscores read as spaces: "authors" becomes "Authors".
-# - date_format: how a date is written, in the syntax Zola's own `date`
-#   filter takes.
-# - languages: the nav's language switcher. Each entry: code, path, label.
+# The [extra] keys the theme reads, with their defaults. Zola merges this table
+# under the [extra] table of the site, key by key. A site sets only what it
+# changes. A site that sets nothing still builds. README.md, "Configuration",
+# gives what each key does.
 [extra]
 default_backdrop = ""
 backdrops = []
-backdrop_labels = {}
 backdrop_credits = {}
 friends = []
 nav = []
-nav_labels = {}
-taxonomy_labels = {}
+labels = {}
+language_labels = {}
+language_order = []
 date_format = "%Y-%m-%d"
-languages = []
+meta_taxonomy = "categories"
+favicon = ""
+
+# The theme strings. A site translates one string by naming that key under
+# [extra.strings.<lang>]. The rest fall back to the English here, so a
+# part-translated language still reads correctly.
+[extra.strings.en]
+home_label = "Home"
+breadcrumb_nav = "Breadcrumb"
+language_nav = "Language"
+background_nav = "Background"
+nav_label = "Pages"
+friends = "We keep company with"
+not_found = "This page is not here."
+back_home = "Back to the front"
+pagination_nav = "Pages of articles"
+newer = "Newer"
+older = "Older"
+article_nav = "Other articles"
+newer_article = "Newer"
+older_article = "Older"

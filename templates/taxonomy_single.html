@@ -1,35 +1,21 @@
-{#- The articles of one term. Shared by tags and categories, as the list is. -#}
+{#- The articles of one term. Tags and categories share this template. -#}
 {% extends "base.html" %}
 
 {% block head_extra %}
 {%- if taxonomy.feed %}
-{%- for feed in config.feed_filenames %}
-{{ macros::feed_link(file=feed, href=term.permalink ~ feed, title=term.name) }}
-{%- endfor %}
+{{ <floreal.feed_links feeds={config.feed_filenames} base_href={term.permalink} title={term.name} /> }}
 {%- endif %}
 {% endblock head_extra %}
 
 {% block main %}
-  {%- set_global brand_is_title = false -%}
-  {% include "partials/header.html" %}
-
-  {%- set_global crumb_titles = [macros::taxonomy_label(name=taxonomy.name, lang=lang, extra=config.extra)] -%}
-  {%- set_global crumb_urls = [get_url(path=taxonomy.slug ~ "/", lang=lang, trailing_slash=true)] -%}
-  {%- set_global crumb_current = term.name -%}
-  {% include "partials/crumbs.html" %}
-
   <h1 class="page-title">{{ term.name }}</h1>
 
-  {#- Paginated: articles come a page at a time, in `paginator.pages`.
-      Not paginated: they're all in `term.pages`. -#}
-  {%- if paginator is defined %}{% set articles = paginator.pages %}{% else %}{% set articles = term.pages %}{% endif %}
-  {%- set date_format = config.extra.date_format | default(value="%Y-%m-%d") %}
-
-  <div class="articles">
-  {%- for article in articles %}
-  {{ macros::article_row(article=article, date_format=date_format, lang=lang) }}
-  {%- endfor %}
-  </div>
-
-  {%- if paginator is defined %}{% include "partials/pager.html" %}{% endif %}
+  {#- With pagination, the articles come one pager at a time. Without it, they
+      are all here. Zola keeps a page with `hidden` out of both. -#}
+  {%- if paginator is defined -%}
+    {%- set_global articles = paginator.pages -%}
+  {%- else -%}
+    {%- set_global articles = term.pages -%}
+  {%- endif %}
+  {% include "partials/article_list.html" %}
 {% endblock main %}

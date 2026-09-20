@@ -1,3 +1,6 @@
+/* Every value a backdrop's [palette] table can name. A photo overrides the ones
+   it needs; the rest are read from here, which is also what a page with no photo
+   is drawn against. */
 :root {
   --ink: oklch(96% 0 0);
   --ink-dim: oklch(80% 0 0);
@@ -13,4 +16,16 @@
   --focus-pos: 50% 50%;
   --scrim:
     linear-gradient(to bottom, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.2) 45%, rgba(0, 0, 0, 0.7));
+  /* The glow that holds words off a photograph: one for running text, one for a
+     heading. A site whose photograph is bright names its own, the way it names
+     its own ink. */
+  --text-glow: 0 1px 14px rgba(0, 0, 0, 0.7);
+  --title-glow: 0 2px 22px rgba(0, 0, 0, 0.55);
+  --panel-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  /* The ring drawn around whatever the keyboard is on. */
+  --focus-ring: 2px solid var(--sand);
+  /* How wide a line of text runs, and how far the photograph behind a page that
+     is being read is softened. */
+  --measure: 60ch;
+  --backdrop-blur: 4px;
 }

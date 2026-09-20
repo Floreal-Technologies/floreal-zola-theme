@@ -1,6 +1,8 @@
-{%- import "macros.html" as macros -%}
-{#- The photo this page ships with: `default_backdrop`'s shot, or the list's first.
-    No backdrops configured: `false`, and the palette, switcher and picture are all left out. -#}
+{#- The backdrop of this page: the one named by `default_backdrop`, or the
+    first of the list.
+
+    With no backdrop configured this is `false`, and the palette, the switcher
+    and the image are left out. -#}
 {%- set_global backdrop = false -%}
 {%- if config.extra.backdrops | length > 0 -%}
   {%- set_global backdrop = config.extra.backdrops | first -%}
@@ -15,34 +17,85 @@
 {%- else -%}
   {%- set_global translations = [] -%}
 {%- endif -%}
-{%- set_global home_url = get_url(path="/", trailing_slash=true) -%}
-{%- for language in config.extra.languages -%}
-  {%- if language.code == lang -%}{%- set_global home_url = get_url(path=language.path, trailing_slash=true) -%}{%- endif -%}
-{%- endfor -%}
-{#- The landing page of a language: the section whose permalink is that language's
-    own root. Every other page — a product, an article, a list, the 404 — is one
-    that is read, and the photo behind it goes soft. -#}
+{#- The landing page of this language. Zola knows where it is. -#}
+{%- set_global home_url = get_url(path="", lang=lang, trailing_slash=true) -%}
+{#- The languages that the nav offers: the language of the site first, then
+    the rest in alphabetical order.
+
+    `config.languages` has no fixed order, so the rest are sorted. A site with
+    its own order writes `extra.language_order`. -#}
+{%- set_global lang_codes = config.extra.language_order or [] -%}
+{%- if lang_codes | length == 0 -%}
+  {%- set_global other_langs = [code for code, options in config.languages if code != config.default_language and code != lang] -%}
+  {%- if lang != config.default_language -%}
+    {%- set_global other_langs = [...other_langs, lang] -%}
+  {%- endif -%}
+  {%- set_global other_langs = other_langs | sort -%}
+  {%- set_global lang_codes = [config.default_language, ...other_langs] -%}
+{%- endif -%}
+{#- The landing page of a language: the section whose permalink is the root of
+    that language. On every other page the backdrop is blurred. -#}
 {%- set_global is_landing = section is defined and section.permalink == home_url -%}
-{#- meta_title and meta_description, read by the title, description and Open Graph tags.
-    Set here because the head renders before a child template's block runs.
-    A taxonomy page has neither `page` nor `section`, so every page kind is checked.
-    The landing page (permalink = home url) keeps the site's own title. -#}
+{#- The site name is the heading of the landing page and of the 404 page. The
+    404 page names no page, section or taxonomy.
+
+    On every other page the site name is a link home, and the page carries
+    breadcrumbs. -#}
+{%- set_global names_nothing = page is not defined and section is not defined and term is not defined and taxonomy is not defined -%}
+{%- set_global brand_is_title = is_landing or names_nothing -%}
+{#- The title, the description and the breadcrumbs, for every kind of page.
+
+    They are set here, not in each template, because the head renders before
+    the block of a child template.
+
+    Two crumb lists, not a list of sections, because a taxonomy page has no
+    section. -#}
 {%- set_global meta_title = config.title -%}
 {%- set_global meta_description = config.description -%}
+{%- set_global crumb_titles = [] -%}
+{%- set_global crumb_urls = [] -%}
+{%- set_global crumb_current = "" -%}
 {%- if page is defined -%}
   {%- set_global meta_title = page.title ~ " — " ~ config.title -%}
-  {%- set_global meta_description = page.description | default(value=config.description) -%}
+  {%- set_global meta_description = page.description or config.description -%}
+  {#- A page inside a section names that section between Home and itself. A
+      standalone page has only the landing page above it.
+
+      The ancestor path comes from Zola, and `lang` selects the translation:
+      Zola 0.23 no longer takes a path with the language code in it.
+
+      `metadata_only` is set because the crumb needs only the title and the
+      URL of the section. -#}
+  {%- if page.ancestors | length > 1 -%}
+    {%- set parent = get_section(path=page.ancestors | last, lang=page.lang, metadata_only=true) -%}
+    {%- set_global crumb_titles = [parent.title] -%}
+    {%- set_global crumb_urls = [parent.permalink] -%}
+  {%- endif -%}
+  {%- set_global crumb_current = page.title -%}
 {%- elif term is defined -%}
   {%- set_global meta_title = term.name ~ " — " ~ config.title -%}
+  {%- set_global crumb_titles = [<floreal.label key={taxonomy.name} />] -%}
+  {%- set_global crumb_urls = [get_url(path=taxonomy.slug ~ "/", lang=lang, trailing_slash=true)] -%}
+  {%- set_global crumb_current = term.name -%}
 {%- elif taxonomy is defined -%}
-  {%- set tax_label = macros::taxonomy_label(name=taxonomy.name, lang=lang, extra=config.extra) -%}
-  {%- set_global meta_title = tax_label ~ " — " ~ config.title -%}
-{%- elif section is defined and section.permalink != home_url -%}
+  {%- set_global taxonomy_title = <floreal.label key={taxonomy.name} /> -%}
+  {%- set_global meta_title = taxonomy_title ~ " — " ~ config.title -%}
+  {%- set_global crumb_current = taxonomy_title -%}
+{%- elif section is defined and not is_landing -%}
   {%- set_global meta_title = section.title ~ " — " ~ config.title -%}
-  {%- set_global meta_description = section.description | default(value=config.description) -%}
+  {%- set_global meta_description = section.description or config.description -%}
+  {%- set_global crumb_current = section.title -%}
 {%- endif -%}
+{#- The date format and the two taxonomy lists, resolved once for every
+    template that shows a list or an article.
+
+    `meta_taxonomy` is the taxonomy beside the date. `pill_kinds` holds the
+    terms under an article. -#}
+{%- set_global date_format = config.extra.date_format -%}
+{%- set_global meta_taxonomy = config.extra.meta_taxonomy -%}
+{%- set_global pill_kinds = [tax.name for tax in config.taxonomies if tax.name != meta_taxonomy] -%}
 <!doctype html>
-<html lang="{{ lang }}"{% if backdrop %} data-theme="{{ backdrop.id }}"{% endif %}>
+<html lang="{{ lang }}" dir="{{ text_direction(lang=lang) }}"{% if backdrop %} data-theme="{{ backdrop.id }}"{% endif %}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -51,40 +104,42 @@
 {%- if current_url is defined %}
 <link rel="canonical" href="{{ current_url | safe }}">
 {%- if translations | length > 0 %}
-{%- for language in config.extra.languages %}
-<link rel="alternate" hreflang="{{ language.code }}" href="{{ macros::lang_url(language=language, translations=translations) }}">
+{%- for code in lang_codes %}
+<link rel="alternate" hreflang="{{ code }}" href="{{ <floreal.lang_url code={code} translations={translations} /> }}">
 {%- endfor %}
 {%- endif %}
 {%- endif %}
 {%- if config.extra.favicon %}
 <link rel="icon" href="{{ get_url(path=config.extra.favicon) | safe }}">
 {%- endif %}
-{%- if backdrop %}
 <script>
-/* Set the palette before first paint. */
+/* Before the first paint, the page records that a script runs. The header can
+   then ship the drop-downs closed, not close them after the reader sees them. */
+document.documentElement.className += " js";
+{%- if backdrop %}
+/* Then the backdrop of the reader, so the palette is correct from the first
+   frame. The key is the one that floreal.js uses. */
 try {
-  /* The same key as floreal.js. */
   var t = localStorage.getItem("floreal-theme");
-  if ({{ config.extra.backdrops | map(attribute="id") | json_encode | safe }}.indexOf(t) !== -1) {
+  if ({{ [shot.id for shot in config.extra.backdrops] | json_encode | safe }}.indexOf(t) !== -1) {
     document.documentElement.dataset.theme = t;
   }
 } catch (e) {}
-</script>
 {%- endif %}
-<link rel="stylesheet" href="{{ get_url(path="floreal.css") | safe }}">
+</script>
+<link rel="stylesheet" href="{{ get_url(path="floreal.css", cachebust=true) | safe }}">
 {%- if config.generate_feeds %}
-{%- for feed in config.feed_filenames %}
-{{ macros::feed_link(file=feed, href=get_url(path=feed, lang=lang), title=config.title) }}
-{%- endfor %}
+{{ <floreal.feed_links feeds={config.feed_filenames} base_href={home_url} title={config.title} /> }}
 {%- endif %}
 {%- if config.extra.backdrops | length > 0 %}
-{#- Each photo's palette and photographer credit, keyed by the id the site gave it.
-    Written here, not in the stylesheet: only this template knows a `path` from a `mountains`.
-    The stylesheet just hides credits and holds a fallback palette for a page with no photo.
-    As CSS, it takes hold the instant `data-theme` changes: before paint, without a script. -#}
+{#- The palette and the credit of each backdrop, keyed by its id. Only this
+    template knows the ids, so the stylesheet cannot hold them.
+
+    As CSS, this applies the moment `data-theme` changes: before the paint,
+    without a script. -#}
 <style>
 {%- for shot in config.extra.backdrops %}
-{%- set palette = shot.palette | default(value=false) %}
+{%- set palette = shot.palette or false %}
 {%- if palette %}
 html[data-theme="{{ shot.id }}"] { {% for name, value in palette %}--{{ name }}: {{ value }}; {% endfor %}}
 {%- endif %}
@@ -99,7 +154,7 @@ html[data-theme="{{ shot.id }}"] .credit[data-for="{{ shot.id }}"] { display: bl
 <meta property="og:url" content="{{ current_url | safe }}">
 {%- endif %}
 {%- if backdrop %}
-<meta property="og:image" content="{{ macros::fallback(shot=backdrop) }}">
+<meta property="og:image" content="{{ <floreal.fallback shot={backdrop} /> }}">
 {%- endif %}
 {%- block head_extra %}{% endblock %}
 </head>
@@ -108,12 +163,16 @@ html[data-theme="{{ shot.id }}"] .credit[data-for="{{ shot.id }}"] { display: bl
 {% if backdrop %}{% include "partials/backdrop.html" %}{% endif -%}
 
 <main class="page">
+{%- include "partials/header.html" %}
+{%- if not brand_is_title %}
+{%- include "partials/crumbs.html" %}
+{%- endif %}
 {%- block main %}{% endblock %}
 </main>
 
 {% include "partials/footer.html" -%}
 
-<script src="{{ get_url(path="floreal.js") | safe }}" defer></script>
+<script src="{{ get_url(path="floreal.js", cachebust=true) | safe }}" defer></script>
 
 </body>
 </html>

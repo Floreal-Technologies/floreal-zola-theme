@@ -1,25 +1,24 @@
+{#- The landing page of a language: the site name as the heading, the line
+    under it, and one card. -#}
 {% extends "base.html" %}
 
 {% block main %}
-  {%- set_global brand_is_title = true -%}
-  {% include "partials/header.html" %}
-
-  {#- The line under the house name. Empty when the section sets none. -#}
-  {%- set tagline = section.extra.tagline | default(value="") -%}
+  {#- The line under the site name. It is empty when the section sets none. -#}
+  {%- set tagline = section.extra?.tagline or "" -%}
   {%- if tagline %}
   <p class="tagline">{{ tagline }}</p>
   {%- endif %}
 
-  {#- The middle of the page: one card that says what the software is for, and
-      the buttons that lead into the site. Both come from the landing page's own
-      front matter, under `extra.hero`; a landing page that writes none gets no
-      card. The buttons are the ones a card draws, so `where = "page"` keeps an
-      action off this one. -#}
-  {%- set hero = section.extra.hero | default(value=false) -%}
+  {#- The card: the line that says what the software does, and the buttons.
+      Both come from `extra.hero` in the front matter.
+
+      A landing page with no `extra.hero` gets no card. These are the buttons
+      of a card, so `where = "page"` keeps an action off it. -#}
+  {%- set hero = section.extra?.hero or false -%}
   {%- if hero %}
   <article class="card card-hero">
     <p class="punchline">{{ hero.punchline }}</p>
-    {{ macros::actions(actions=hero.actions | default(value=[]), where="card", here=current_url) }}
+    {{ <floreal.actions actions={hero.actions or []} where="card" here={current_url} /> }}
   </article>
   {%- endif %}
 {% endblock main %}

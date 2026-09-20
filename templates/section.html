@@ -1,0 +1,47 @@
+{#- Every section: the blog, the products, and any section added later.
+
+    Zola selects this template itself, so a new section needs no `template` in
+    its front matter and cannot fall back to the Zola placeholder.
+
+    A section shows article rows or cards. `extra.layout = "articles"` or
+    `"cards"` sets this.
+
+    A section that sets neither shows rows if its pages carry dates, and cards
+    if they do not. -#}
+{% extends "base.html" %}
+
+{% block head_extra %}
+{%- if section.generate_feeds %}
+{{ <floreal.feed_links feeds={config.feed_filenames} base_href={section.permalink} title={section.title} /> }}
+{%- endif %}
+{% endblock head_extra %}
+
+{% block main %}
+  {#- With pagination, the pages come one pager at a time. Without it, they are
+      all here. Zola keeps a page with `hidden` out of both. -#}
+  {%- if paginator is defined -%}
+    {%- set_global entries = paginator.pages -%}
+  {%- else -%}
+    {%- set_global entries = section.pages -%}
+  {%- endif -%}
+  {%- set_global layout = section.extra?.layout or "" -%}
+  {%- if not layout -%}
+    {%- set_global layout = "cards" -%}
+    {%- for entry in entries -%}
+      {%- if entry.date -%}{%- set_global layout = "articles" -%}{%- endif -%}
+    {%- endfor -%}
+  {%- endif %}
+
+  <h1 class="page-title">{{ section.title }}</h1>
+
+  {%- if layout == "articles" %}
+  {%- set_global articles = entries %}
+  {% include "partials/article_list.html" %}
+  {%- else %}
+  <section class="cards" aria-label="{{ section.title }}">
+  {%- for entry in entries %}
+  {{ <floreal.card product={entry} here={current_url} /> }}
+  {%- endfor %}
+  </section>
+  {%- endif %}
+{% endblock main %}

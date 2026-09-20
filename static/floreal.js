@@ -1,8 +1,10 @@
 /* The two drop-downs in the header.
+   Both ship from the template whole and closed, so nothing here builds mark-up
+   or moves anything: the reader never sees the header change shape. The
+   stylesheet lays the language panel back out as a plain row when no script is
+   running, and hides the switcher, which has nothing to switch without one.
    The backdrop switcher swaps the photo, follows [data-theme] on <html> (set in
-   the page head, before paint), and remembers the choice. The language nav
-   ships as a plain row of links, so a reader with no script still has every
-   language; this file folds that row into a drop-down of the same shape.
+   the page head, before paint), and remembers the choice.
    Both are opened and closed by the one piece of code below. */
 (function () {
   "use strict";
@@ -37,7 +39,12 @@
       if (!yes && menu.contains(document.activeElement)) toggle.focus();
       toggle.setAttribute("aria-expanded", String(yes));
       menu.hidden = !yes;
-      if (yes) (items.filter(marked)[0] || items[0]).focus();
+      if (yes) {
+        document.addEventListener("pointerdown", outside);
+        (items.filter(marked)[0] || items[0]).focus();
+      } else {
+        document.removeEventListener("pointerdown", outside);
+      }
     }
 
     toggle.addEventListener("click", function () {
@@ -68,10 +75,11 @@
     });
 
     /* A press elsewhere closes the menu, on the press and not on the release,
-       which is how the menus of the desktop behave. */
-    document.addEventListener("pointerdown", function (event) {
-      if (isOpen() && !nav.contains(event.target)) setOpen(false);
-    });
+       which is how the menus of the desktop behave. The page is listened to
+       only while the panel is open: a closed menu costs a reader nothing. */
+    function outside(event) {
+      if (!nav.contains(event.target)) setOpen(false);
+    }
 
     /* And so does the focus leaving by the keyboard. A null relatedTarget is a
        press on something that cannot hold the focus, or the window losing it:
@@ -150,60 +158,12 @@
       panel.toggle.focus();
     });
 
-    nav.hidden = false;
     apply(SHOTS[root.dataset.theme] ? root.dataset.theme : shown, false);
   }
 
-  function languages() {
-    var nav = document.querySelector(".langs");
-    if (!nav) return;
-    var links = Array.prototype.slice.call(nav.querySelectorAll("a"));
-    /* One language is no choice, and the row is the whole nav: leave it. */
-    if (links.length < 2) return;
-
-    var here = links.filter(marked)[0] || links[0];
-
-    /* The trigger: the glyph, then the language the reader is reading. The
-       glyph is drawn by the stylesheet, so the mark-up carries no picture. */
-    var icon = document.createElement("span");
-    icon.className = "menu-icon i-languages";
-    icon.setAttribute("aria-hidden", "true");
-
-    var label = document.createElement("span");
-    label.className = "menu-label";
-    label.textContent = here.textContent.trim();
-
-    var toggle = document.createElement("button");
-    toggle.type = "button";
-    toggle.className = "menu-toggle";
-    toggle.setAttribute("aria-haspopup", "true");
-    toggle.setAttribute("aria-expanded", "false");
-    toggle.setAttribute("aria-controls", "langs-menu");
-    toggle.appendChild(icon);
-    toggle.appendChild(label);
-
-    /* The links themselves move into the panel: each one keeps its href, its
-       hreflang and its aria-current, and goes on working as a link. */
-    var list = document.createElement("ul");
-    list.id = "langs-menu";
-    list.hidden = true;
-    links.forEach(function (link) {
-      var item = document.createElement("li");
-      item.appendChild(link);
-      list.appendChild(item);
-    });
-
-    /* The links are in the panel now, so what is left in the nav is the
-       white space the template wrote between them. */
-    nav.textContent = "";
-    nav.appendChild(toggle);
-    nav.appendChild(list);
-    /* Last: the row's own rules hold until the drop-down is whole. */
-    nav.classList.add("menu");
-
-    dropdown(nav);
-  }
-
   backdrops();
-  languages();
+
+  /* The language nav is a drop-down and nothing more: the template wrote it. */
+  var langs = document.querySelector(".langs");
+  if (langs) dropdown(langs);
 })();
