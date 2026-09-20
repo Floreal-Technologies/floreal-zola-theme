@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block main %}
+  {%- set_global brand_is_title = true -%}
+  {% include "partials/header.html" %}
+
+  {#- The line under the name of the house. A section that gives none is a
+      section that has nothing to say there. -#}
+  {%- set tagline = section.extra.tagline | default(value="") -%}
+  {%- if tagline %}
+  <p class="tagline">{{ tagline }}</p>
+  {%- endif %}
+
+  {#- Which products the landing page shows, and in what order. The list is the
+      landing page's own; `/products/` lists them all by itself. -#}
+  {%- set products = section.extra.products | default(value=[]) -%}
+  {%- if products | length > 0 %}
+  <section class="cards" aria-label="{{ trans(key="products_label", lang=lang) }}">
+  {%- for path in products %}
+  {{ macros::card(product=get_page(path=path)) }}
+  {%- endfor %}
+  </section>
+  {%- endif %}
+{% endblock main %}

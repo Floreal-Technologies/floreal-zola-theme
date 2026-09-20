@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block main %}
+  {%- set_global brand_is_title = false -%}
+  {% include "partials/header.html" %}
+
+  {%- set_global crumb_parents = [] -%}
+  {%- set_global crumb_current = section.title -%}
+  {% include "partials/crumbs.html" %}
+
+  <h1 class="page-title">{{ section.title }}</h1>
+
+  <section class="cards" aria-label="{{ section.title }}">
+  {%- for product in section.pages %}
+  {{ macros::card(product=product) }}
+  {%- endfor %}
+  </section>
+{% endblock main %}

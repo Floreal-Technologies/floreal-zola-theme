@@ -1,0 +1,24 @@
+{#- The foot of every page: who we keep company with, and who took the photo.
+
+    A site that names no friend and shows no photo has an empty footer, so it
+    gets none: the element carries its own padding, and an empty one would be a
+    band of nothing at the end of the page. -#}
+{%- set friends = config.extra.friends | default(value=[]) -%}
+{%- set backdrops = config.extra.backdrops | default(value=[]) -%}
+{%- if friends | length > 0 or backdrops | length > 0 %}
+<footer>
+  {%- if friends | length > 0 %}
+  <p class="friends">{{ trans(key="friends", lang=lang) }}
+  {%- for friend in friends %}
+    <a href="{{ friend.url | safe }}">{{ friend.name }}</a>
+    {%- if not loop.last %}
+    <span class="sep" aria-hidden="true">∴</span>
+    {%- endif %}
+  {%- endfor %}
+  </p>
+  {%- endif %}
+{%- for shot in backdrops %}
+  <p class="credit" data-for="{{ shot.id }}">{{ trans(key="credit_" ~ shot.id, lang=lang) | safe }}</p>
+{%- endfor %}
+</footer>
+{%- endif %}

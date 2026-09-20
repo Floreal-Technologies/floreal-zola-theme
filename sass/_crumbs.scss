@@ -1,0 +1,33 @@
+/* Breadcrumbs */
+.crumbs {
+  margin-top: 1.75rem;
+  font-size: 0.8125rem;
+  color: var(--ink-dim);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.7);
+}
+
+.crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.crumbs li { display: flex; gap: 0.5rem; align-items: baseline; }
+.crumbs a { color: var(--ink-dim); }
+.crumbs a:hover { color: var(--ink); }
+.crumbs [aria-current="page"] { color: var(--ink); }
+.crumbs .sep { opacity: 0.6; }
+
+.page-title, .product h1 {
+  margin: 0.35rem 0 0;
+  font-size: clamp(1.7rem, 1.3rem + 1.8vw, 2.5rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.55);
+}
+
+.page-title { margin-top: 0.75rem; }

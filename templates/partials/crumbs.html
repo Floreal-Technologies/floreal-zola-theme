@@ -1,0 +1,21 @@
+{#- Home / Products / <this page>.
+
+    An include, not a macro, because it calls trans(). It expects:
+      crumb_parents   the sections between Home and this page, in order
+      crumb_current   the name of this page, which is said but not linked
+      home_url        the landing page of this language, set in base.html -#}
+<nav class="crumbs" aria-label="{{ trans(key="breadcrumb_nav", lang=lang) }}">
+  <ol>
+    <li>
+      <a href="{{ home_url | safe }}">{{ trans(key="home_label", lang=lang) }}</a>
+      <span class="sep" aria-hidden="true">/</span>
+    </li>
+    {%- for parent in crumb_parents %}
+    <li>
+      <a href="{{ parent.permalink | safe }}">{{ parent.title }}</a>
+      <span class="sep" aria-hidden="true">/</span>
+    </li>
+    {%- endfor %}
+    <li><span aria-current="page">{{ crumb_current }}</span></li>
+  </ol>
+</nav>

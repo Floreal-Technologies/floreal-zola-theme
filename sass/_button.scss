@@ -1,0 +1,37 @@
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: auto;
+  padding-top: 1.5rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.6rem 1.1rem;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 0.95rem;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn:hover, .btn:focus-visible {
+  background: var(--tint);
+  border-color: color-mix(in oklab, var(--ink) 40%, transparent);
+}
+
+.btn-primary {
+  background: var(--sand);
+  border-color: var(--sand);
+  color: var(--on-sand);
+  font-weight: 600;
+}
+
+.btn-primary:hover, .btn-primary:focus-visible {
+  background: var(--sand-lift);
+  border-color: var(--sand-lift);
+}
+
+.btn:focus-visible { border-radius: 8px; }

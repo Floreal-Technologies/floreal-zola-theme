@@ -1,0 +1,35 @@
+.product { margin-top: 0.75rem; }
+
+.product .what { margin: 0; }
+
+.prose {
+  margin-top: 1rem;
+  max-width: 60ch;
+  color: var(--ink-dim);
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.7);
+}
+
+.prose > :first-child { margin-top: 0; }
+.prose p, .prose ul, .prose ol { margin: 0.85rem 0; }
+.prose strong { color: var(--ink); font-weight: 600; }
+
+.prose h2, .prose h3 {
+  margin: 1.75rem 0 0.5rem;
+  color: var(--ink);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.prose h2 { font-size: clamp(1.2rem, 1.1rem + 0.6vw, 1.45rem); }
+.prose h3 { font-size: 1.1rem; }
+.prose ul, .prose ol { padding-left: 1.25rem; }
+.prose li { margin: 0.35rem 0; }
+
+.prose code {
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: var(--tint);
+  font-size: 0.9em;
+}
+
+.product .actions { padding-top: 2rem; }

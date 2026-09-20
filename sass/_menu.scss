@@ -1,0 +1,85 @@
+.themes {
+  position: relative;
+  font-size: 0.875rem;
+}
+
+.themes-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--tint);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.themes-toggle:hover { border-color: color-mix(in oklab, var(--ink) 40%, transparent); }
+
+/* The chevron, turned over when the panel is open. */
+.themes-toggle::after {
+  content: "";
+  width: 0.45em;
+  height: 0.45em;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-0.15em) rotate(45deg);
+  transition: transform 0.15s ease;
+}
+
+.themes-toggle[aria-expanded="true"]::after { transform: translateY(0.1em) rotate(-135deg); }
+
+.themes ul {
+  position: absolute;
+  right: 0;
+  z-index: 5;
+  min-width: 100%;
+  margin: 0.35rem 0 0;
+  padding: 0.3rem;
+  list-style: none;
+  background: var(--card-solid);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.themes li button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  margin: 0;
+  padding: 0.4rem 0.6rem 0.4rem 0.4rem;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--ink-dim);
+  font: inherit;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.themes li button:hover,
+.themes li button:focus-visible {
+  background: var(--tint);
+  color: var(--ink);
+}
+
+.themes li button::before {
+  content: "";
+  flex: 0 0 1em;
+  text-align: center;
+  color: var(--accent);
+}
+
+.themes li button:focus-visible { outline: 2px solid var(--sand); outline-offset: -2px; }
+
+.themes li button[aria-checked="true"] { color: var(--ink); }
+.themes li button[aria-checked="true"]::before { content: "\2713"; }
+
+.themes-toggle:focus-visible { outline: 2px solid var(--sand); outline-offset: 3px; }

@@ -1,0 +1,23 @@
+<div class="backdrop" data-shot="{{ backdrop.id }}">
+  <picture>
+    <source type="image/webp"
+            srcset="{{ macros::srcset(shot=backdrop, ext="webp") }}"
+            sizes="100vw">
+    <img src="{{ macros::fallback(shot=backdrop) }}"
+         srcset="{{ macros::srcset(shot=backdrop, ext="jpg") }}"
+         sizes="100vw" width="{{ backdrop.width }}" height="{{ backdrop.height }}"
+         alt="" fetchpriority="high" decoding="async">
+  </picture>
+</div>
+
+{#- Read by floreal.js, so the list of photos is declared once, in config.toml.
+    The URLs are built here rather than in the script: get_url() is the only
+    thing that knows where the site is rooted, and it runs at build time. -#}
+<script type="application/json" id="backdrops">[
+{%- for shot in config.extra.backdrops %}
+  {%- set webp = macros::srcset(shot=shot, ext="webp") -%}
+  {%- set jpg = macros::srcset(shot=shot, ext="jpg") -%}
+  {%- set src = macros::fallback(shot=shot) -%}
+  {"id": {{ shot.id | json_encode | safe }}, "webp": {{ webp | json_encode | safe }}, "jpg": {{ jpg | json_encode | safe }}, "src": {{ src | json_encode | safe }}, "width": {{ shot.width }}, "height": {{ shot.height }}}{% if not loop.last %},{% endif %}
+{%- endfor %}
+]</script>

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block head_extra %}
+<meta name="robots" content="noindex">
+{% endblock head_extra %}
+
+{% block main %}
+  {%- set_global brand_is_title = true -%}
+  {% include "partials/header.html" %}
+
+  <p class="tagline">{{ trans(key="not_found", lang=lang) }}</p>
+  <p class="lede"><a href="{{ home_url | safe }}">{{ trans(key="back_home", lang=lang) }}</a></p>
+{% endblock main %}

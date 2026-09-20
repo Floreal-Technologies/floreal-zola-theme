@@ -1,0 +1,59 @@
+{#- The srcset of one backdrop, in one format. A shot's `base` is a path under
+    `static/`, so every candidate goes through get_url() and the site works just
+    as well under a sub-path as at the root of a domain. -#}
+{% macro srcset(shot, ext) -%}
+  {%- for w in shot.widths %}{{ get_url(path=shot.base ~ w ~ "." ~ ext) | safe }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor -%}
+{%- endmacro srcset %}
+
+{#- The one file a browser that knows nothing of srcset is given: the widest, so
+    it matches the intrinsic size the markup declares. -#}
+{% macro fallback(shot) -%}
+  {%- set widest = shot.widths | last -%}
+  {{- get_url(path=shot.base ~ widest ~ ".jpg") | safe -}}
+{%- endmacro fallback %}
+
+{#- Where the other language of the page at hand lives. A page that has not been
+    translated yet sends the reader to the landing page of that language, which is
+    the one URL every language is sure to have.
+
+    Every link a page carries is a full URL, permalink or get_url(), so a site
+    served from a sub-path of a domain reaches its own pages. -#}
+{% macro lang_url(language, translations) -%}
+  {%- set_global found = get_url(path=language.path, trailing_slash=true) -%}
+  {%- for other in translations -%}
+    {%- if other.lang == language.code -%}{%- set_global found = other.permalink -%}{%- endif -%}
+  {%- endfor -%}
+  {{- found | safe -}}
+{%- endmacro lang_url %}
+
+{#- One button. `primary` is what makes an action the one the reader is meant to
+    take; there is at most one of those per row. -#}
+{% macro btn(action) -%}
+<a class="btn{% if action.primary %} btn-primary{% endif %}" href="{{ action.url | safe }}">{{ action.label }}</a>
+{%- endmacro btn %}
+
+{#- The row of buttons that closes a card or a product page. A product with no
+    actions gets no row at all. -#}
+{% macro actions(actions) -%}
+{%- if actions | length > 0 %}
+<div class="actions">
+  {%- for action in actions %}
+  {{ macros::btn(action=action) }}
+  {%- endfor %}
+</div>
+{%- endif %}
+{%- endmacro actions %}
+
+{#- One product, as it appears on the landing page and on the product index. The
+    title is the way in to the product's own page. -#}
+{% macro card(product) -%}
+{%- set what = product.extra.what | default(value="") -%}
+<article class="card" aria-labelledby="{{ product.slug }}">
+  {%- if what %}
+  <p class="what">{{ what }}</p>
+  {%- endif %}
+  <h2 id="{{ product.slug }}"><a href="{{ product.permalink | safe }}">{{ product.title }}</a></h2>
+  {{ product.summary | default(value=product.content) | safe }}
+  {{ macros::actions(actions=product.extra.actions | default(value=[])) }}
+</article>
+{%- endmacro card %}

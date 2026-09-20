@@ -1,0 +1,29 @@
+name = "Floréal"
+description = "A one-page house front: a full-bleed photographic backdrop the reader can switch, cards for what you make, and two languages side by side."
+license = "GPL-3.0-only"
+homepage = "https://github.com/Floreal-Technologies/floreal-technologies.github.io"
+min_version = "0.22.0"
+demo = "https://floreal.tech"
+
+[author]
+name = "Floréal Technologies"
+homepage = "https://floreal.tech"
+
+# The [extra] keys the theme reads, with their defaults. Zola merges this table
+# under the site's own [extra], so a site only names what it changes.
+#
+# A site that lists no backdrop gets a page with no photo, no switcher and the
+# palette of :root. Each entry in `backdrops` is
+#   id, base (a path under static/, without the leading slash), widths, width, height
+# and, if the photo wants colours of its own, a [extra.backdrops.palette] table
+# whose keys become custom properties: ink, ink-dim, line, tint, card,
+# card-solid, accent, sand, sand-lift, on-sand, bg, focus-pos, scrim. A photo
+# that gives none is read against the palette on :root.
+#
+# Each backdrop also wants a `backdrop_<id>` and a `credit_<id>` in
+# [translations].
+[extra]
+default_backdrop = ""
+backdrops = []
+friends = []
+languages = []

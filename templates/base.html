@@ -1,0 +1,101 @@
+{%- import "macros.html" as macros -%}
+{#- The photo this page ships with: the one `default_backdrop` names, or the
+    first of the list. A site that lists none gets `false`, and every part that
+    draws a backdrop — the palette, the switcher, the picture — is left out. -#}
+{%- set_global backdrop = false -%}
+{%- if config.extra.backdrops | length > 0 -%}
+  {%- set_global backdrop = config.extra.backdrops | first -%}
+  {%- for shot in config.extra.backdrops -%}
+    {%- if shot.id == config.extra.default_backdrop -%}{%- set_global backdrop = shot -%}{%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+{%- if page is defined -%}
+  {%- set_global translations = page.translations -%}
+{%- elif section is defined -%}
+  {%- set_global translations = section.translations -%}
+{%- else -%}
+  {%- set_global translations = [] -%}
+{%- endif -%}
+{%- set_global home_url = get_url(path="/", trailing_slash=true) -%}
+{%- for language in config.extra.languages -%}
+  {%- if language.code == lang -%}{%- set_global home_url = get_url(path=language.path, trailing_slash=true) -%}{%- endif -%}
+{%- endfor -%}
+<!doctype html>
+<html lang="{{ lang }}"{% if backdrop %} data-theme="{{ backdrop.id }}"{% endif %}>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{%- if page is defined %}
+<title>{{ page.title }} — {{ config.title }}</title>
+<meta name="description" content="{{ page.description | default(value=config.description) }}">
+{%- else %}
+<title>{{ config.title }}</title>
+<meta name="description" content="{{ config.description }}">
+{%- endif %}
+{%- if current_url is defined %}
+<link rel="canonical" href="{{ current_url | safe }}">
+{%- for language in config.extra.languages %}
+<link rel="alternate" hreflang="{{ language.code }}" href="{{ macros::lang_url(language=language, translations=translations) }}">
+{%- endfor %}
+{%- endif %}
+{%- if config.extra.favicon %}
+<link rel="icon" href="{{ get_url(path=config.extra.favicon) | safe }}">
+{%- endif %}
+{%- if backdrop %}
+<script>
+/* Set the palette before first paint. */
+try {
+  /* The same key as floreal.js. */
+  var t = localStorage.getItem("floreal-theme");
+  if ({{ config.extra.backdrops | map(attribute="id") | json_encode | safe }}.indexOf(t) !== -1) {
+    document.documentElement.dataset.theme = t;
+  }
+} catch (e) {}
+</script>
+{%- endif %}
+<link rel="stylesheet" href="{{ get_url(path="floreal.css") | safe }}">
+{%- if config.extra.backdrops | length > 0 %}
+{#- What each photo brings with it: the colours the page is read against, and
+    the credit that names the photographer.
+
+    Both are written here rather than in the stylesheet, because both are keyed
+    by an id the site chose. The stylesheet hides every credit and carries a
+    palette for a page that has no photo at all; these rules are the ones that
+    know a `path` from a `mountains`. Being CSS, they take hold at the moment
+    `data-theme` changes — before the first paint, and on a page that never runs
+    a script. -#}
+<style>
+{%- for shot in config.extra.backdrops %}
+{%- set palette = shot.palette | default(value=false) %}
+{%- if palette %}
+html[data-theme="{{ shot.id }}"] { {% for name, value in palette %}--{{ name }}: {{ value }}; {% endfor %}}
+{%- endif %}
+html[data-theme="{{ shot.id }}"] .credit[data-for="{{ shot.id }}"] { display: block; }
+{%- endfor %}
+</style>
+{%- endif %}
+<meta property="og:title" content="{% if page is defined %}{{ page.title }}{% else %}{{ config.title }}{% endif %}">
+<meta property="og:description" content="{% if page is defined %}{{ page.description | default(value=config.description) }}{% else %}{{ config.description }}{% endif %}">
+<meta property="og:type" content="website">
+{%- if current_url is defined %}
+<meta property="og:url" content="{{ current_url | safe }}">
+{%- endif %}
+{%- if backdrop %}
+<meta property="og:image" content="{{ macros::fallback(shot=backdrop) }}">
+{%- endif %}
+{%- block head_extra %}{% endblock %}
+</head>
+<body>
+
+{% if backdrop %}{% include "partials/backdrop.html" %}{% endif -%}
+
+<main class="page">
+{%- block main %}{% endblock %}
+</main>
+
+{% include "partials/footer.html" -%}
+
+<script src="{{ get_url(path="floreal.js") | safe }}" defer></script>
+
+</body>
+</html>
