@@ -57,3 +57,43 @@
   {{ macros::actions(actions=product.extra.actions | default(value=[])) }}
 </article>
 {%- endmacro card %}
+
+{#- One feed, as the head declares it. The type is read from the file name,
+    because a site that asks for `rss.xml` in `feed_filenames` is given RSS and
+    one that asks for `atom.xml` is given Atom. -#}
+{% macro feed_link(file, href, title) -%}
+<link rel="alternate" type="{% if file is ending_with("atom.xml") %}application/atom+xml{% else %}application/rss+xml{% endif %}" title="{{ title }}" href="{{ href | safe }}">
+{%- endmacro feed_link %}
+
+{#- The terms one page carries, as pills. `kinds` says which taxonomies to show
+    and in what order; a caller that wants no empty row checks first that the
+    page carries one of them. `lang` is passed in because a macro sees none of
+    the context the templates read. -#}
+{% macro pills(page, kinds, lang) -%}
+<p class="pills">
+  {%- for kind in kinds %}
+  {%- for term in page.taxonomies[kind] | default(value=[]) %}
+  <a class="pill" href="{{ get_taxonomy_url(kind=kind, name=term, lang=lang) | safe }}">{{ term }}</a>
+  {%- endfor %}
+  {%- endfor %}
+</p>
+{%- endmacro pills %}
+
+{#- One article in a list: the day it was written and what it was filed under,
+    the title as the way in, the opening sentences, and the tags. -#}
+{% macro article_row(article, date_format, lang) -%}
+<article class="article-row">
+  <p class="meta">
+    <time datetime="{{ article.date }}">{{ article.date | date(format=date_format) }}</time>
+    {%- for term in article.taxonomies.categories | default(value=[]) %}
+    <span class="sep" aria-hidden="true">·</span>
+    <span class="category">{{ term }}</span>
+    {%- endfor %}
+  </p>
+  <h2><a href="{{ article.permalink | safe }}">{{ article.title }}</a></h2>
+  {{ article.summary | default(value=article.content) | safe }}
+  {%- if article.taxonomies.tags | default(value=[]) | length > 0 %}
+  {{ macros::pills(page=article, kinds=["tags"], lang=lang) }}
+  {%- endif %}
+</article>
+{%- endmacro article_row %}

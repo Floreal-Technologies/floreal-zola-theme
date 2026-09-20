@@ -47,3 +47,20 @@
   color: var(--ink);
   text-decoration-color: var(--accent);
 }
+
+/* The nav of pages, above the languages and sharing their row. */
+.pages {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.pages a { color: var(--ink-dim); }
+.pages a:hover { color: var(--ink); }
+
+.pages [aria-current="true"] {
+  color: var(--ink);
+  text-decoration-color: var(--accent);
+}

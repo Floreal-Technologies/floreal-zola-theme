@@ -1,0 +1,17 @@
+{#- Replaced in full by the task that writes the term pages. -#}
+{% extends "base.html" %}
+
+{% block main %}
+  {%- set_global brand_is_title = false -%}
+  {% include "partials/header.html" %}
+
+  <h1 class="page-title">{{ term.name }}</h1>
+
+  {%- set date_format = config.extra.date_format | default(value="%Y-%m-%d") %}
+
+  <div class="articles">
+  {%- for article in term.pages %}
+  {{ macros::article_row(article=article, date_format=date_format, lang=lang) }}
+  {%- endfor %}
+  </div>
+{% endblock main %}

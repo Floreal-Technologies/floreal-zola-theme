@@ -26,4 +26,6 @@ homepage = "https://floreal.tech"
 default_backdrop = ""
 backdrops = []
 friends = []
+nav = []
+date_format = "%Y-%m-%d"
 languages = []

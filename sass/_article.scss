@@ -1,0 +1,89 @@
+/* The article list, and the parts an article page shares with it. */
+.articles {
+  margin-top: clamp(2rem, 6vh, 3rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+}
+
+.article-row {
+  padding-bottom: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  border-bottom: 1px solid var(--line);
+}
+
+.articles > .article-row:last-child { padding-bottom: 0; border-bottom: 0; }
+
+.article-row h2 {
+  margin: 0.35rem 0 0;
+  font-size: clamp(1.3rem, 1.15rem + 0.8vw, 1.65rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.55);
+}
+
+.article-row h2 a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  transition: text-decoration-color 0.15s ease;
+}
+
+.article-row h2 a:hover { text-decoration-color: var(--accent); }
+
+.article-row p {
+  color: var(--ink-dim);
+  max-width: 60ch;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.7);
+}
+
+/* The day, and what the article is filed under. */
+.meta {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.meta .category { color: var(--accent); }
+.meta .sep { opacity: 0.6; }
+
+/* One term, wherever a term is shown. */
+.pills {
+  margin: 0.75rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.pill {
+  padding: 0.15rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--tint);
+  color: var(--ink-dim);
+  font-size: 0.8125rem;
+  text-decoration: none;
+}
+
+.pill:hover { color: var(--ink); border-color: var(--accent); }
+
+/* Newer and older, under a list that runs to more than one page. */
+.pager {
+  margin-top: clamp(2rem, 6vh, 3rem);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.875rem;
+}
+
+.pager-count {
+  color: var(--ink-dim);
+  font-variant-numeric: tabular-nums;
+}

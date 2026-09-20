@@ -9,7 +9,8 @@
       translations    this page's other languages, set in base.html
       backdrop        the photo the markup shipped with, set in base.html, or
                       false when the site lists none — then there is nothing to
-                      switch and the switcher is left out -#}
+                      switch and the switcher is left out
+      nav             the pages nav, read from config.extra.nav -#}
 <header class="brand{% if not brand_is_title %} brand-small{% endif %}">
   {%- if brand_is_title %}
   <h1>{{ config.title }}</h1>
@@ -29,6 +30,15 @@
         </li>
         {%- endfor %}
       </ul>
+    </nav>
+    {%- endif %}
+    {%- set nav = config.extra.nav | default(value=[]) -%}
+    {%- if nav | length > 0 %}
+    <nav class="pages" aria-label="{{ trans(key="nav_label", lang=lang) }}">
+      {%- for entry in nav %}
+      {%- set target = home_url ~ entry.path %}
+      <a href="{{ target | safe }}"{% if current_url is defined and current_url is starting_with(target) %} aria-current="true"{% endif %}>{{ trans(key="nav_" ~ entry.key, lang=lang) }}</a>
+      {%- endfor %}
     </nav>
     {%- endif %}
     <nav class="langs" aria-label="{{ trans(key="language_nav", lang=lang) }}">

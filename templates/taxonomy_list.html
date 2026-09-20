@@ -1,0 +1,15 @@
+{#- Replaced in full by the task that writes the term pages. -#}
+{% extends "base.html" %}
+
+{% block main %}
+  {%- set_global brand_is_title = false -%}
+  {% include "partials/header.html" %}
+
+  <h1 class="page-title">{{ taxonomy.name }}</h1>
+
+  <ul class="terms">
+  {%- for term in terms %}
+    <li><a class="pill" href="{{ term.permalink | safe }}">{{ term.name }}</a></li>
+  {%- endfor %}
+  </ul>
+{% endblock main %}

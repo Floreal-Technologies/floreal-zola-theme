@@ -34,6 +34,8 @@ under the site's, so a site names only what it changes.
 | `languages` | list of tables | the languages the nav switches between, in the order it shows them |
 | `friends` | list of tables | the links in the footer. A site with no friend and no photo gets no footer |
 | `favicon` | string | a path under `static/`, such as `img/favicon.png`. Unset, the page asks for no icon |
+| `nav` | list of tables | the pages linked from the header, beside the language nav. An empty list gives no nav |
+| `date_format` | string | how a date is written on the page, in the syntax `zola`'s own `date` filter takes |
 
 ### A backdrop
 
@@ -65,6 +67,19 @@ it calls them. A language that is missing here is built but never linked to.
 
 Each entry of `[[extra.friends]]` holds a `name` and a `url`.
 
+### A nav entry
+
+Each entry of `[[extra.nav]]` holds:
+
+| Key | What it is |
+| --- | --- |
+| `key` | the entry's name, used to look up its label: `nav_<key>` in `[translations]` |
+| `path` | the page it links to, as a path under the language's own root, with no leading slash, such as `blog/` |
+
+One list serves every language: the theme builds each link from the current
+language's `home_url`, so `blog/` becomes `/blog/` in English and `/fr/blog/`
+in French.
+
 ### The words
 
 Every word the templates write themselves comes from `trans()`, so each
@@ -83,6 +98,8 @@ language's translations table — `[translations]` for the default language, and
 | `back_home` | the link under it |
 | `backdrop_<id>` | the name of one photo, in the switcher. One per backdrop |
 | `credit_<id>` | the line that names one photographer, in the footer. One per backdrop |
+| `nav_label` | the name of the pages nav, for a screen reader |
+| `nav_<key>` | the label of one nav entry. One per entry of `[[extra.nav]]` |
 
 `trans()` fails the build on a key a language does not carry, so every table
 needs the whole list.

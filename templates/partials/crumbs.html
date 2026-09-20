@@ -1,18 +1,22 @@
-{#- Home / Products / <this page>.
+{#- Home / Blog / <this page>.
 
     An include, not a macro, because it calls trans(). It expects:
-      crumb_parents   the sections between Home and this page, in order
-      crumb_current   the name of this page, which is said but not linked
-      home_url        the landing page of this language, set in base.html -#}
+      crumb_titles  the names of the steps between Home and this page, in order
+      crumb_urls    their URLs, in the same order
+      crumb_current the name of this page, which is said but not linked
+      home_url      the landing page of this language, set in base.html
+
+    Two lists rather than a list of sections, because a taxonomy page has no
+    section: its parent is a name from trans() and a URL from get_url(). -#}
 <nav class="crumbs" aria-label="{{ trans(key="breadcrumb_nav", lang=lang) }}">
   <ol>
     <li>
       <a href="{{ home_url | safe }}">{{ trans(key="home_label", lang=lang) }}</a>
       <span class="sep" aria-hidden="true">/</span>
     </li>
-    {%- for parent in crumb_parents %}
+    {%- for title in crumb_titles %}
     <li>
-      <a href="{{ parent.permalink | safe }}">{{ parent.title }}</a>
+      <a href="{{ crumb_urls[loop.index0] | safe }}">{{ title }}</a>
       <span class="sep" aria-hidden="true">/</span>
     </li>
     {%- endfor %}
