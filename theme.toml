@@ -22,6 +22,11 @@ homepage = "https://floreal.tech"
 #
 # Each backdrop also wants a `backdrop_<id>` and a `credit_<id>` in
 # [translations].
+#
+# `nav` is the pages linked from the header, beside the language nav: one
+# [[extra.nav]] table per entry, each wanting a `nav_<key>` in [translations].
+# `date_format` is how a date is written on the page, in the syntax Zola's own
+# `date` filter takes.
 [extra]
 default_backdrop = ""
 backdrops = []

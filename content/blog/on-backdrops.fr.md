@@ -4,7 +4,7 @@ date = 2026-03-02
 description = "Pourquoi le thème lit les couleurs propres à une photo plutôt que d'en demander une."
 
 [taxonomies]
-tags = ["design"]
+tags = ["conception"]
 categories = ["notes"]
 +++
 

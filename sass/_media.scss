@@ -1,7 +1,7 @@
 @media (prefers-reduced-motion: reduce) {
   .backdrop img { transition: none; }
   .themes-toggle, .themes-toggle::after { transition: none; }
-  .card h2 a { transition: none; }
+  .card h2 a, .article-row h2 a { transition: none; }
 }
 
 @media (prefers-reduced-transparency: reduce) {

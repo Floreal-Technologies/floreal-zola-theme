@@ -53,7 +53,7 @@
   <p class="what">{{ what }}</p>
   {%- endif %}
   <h2 id="{{ product.slug }}"><a href="{{ product.permalink | safe }}">{{ product.title }}</a></h2>
-  {{ product.summary | default(value=product.content) | safe }}
+  {% if product.summary %}{{ product.summary | safe }}{% else %}{{ product.content | safe }}{% endif %}
   {{ macros::actions(actions=product.extra.actions | default(value=[])) }}
 </article>
 {%- endmacro card %}
@@ -82,16 +82,19 @@
 {#- One article in a list: the day it was written and what it was filed under,
     the title as the way in, the opening sentences, and the tags. -#}
 {% macro article_row(article, date_format, lang) -%}
-<article class="article-row">
+<article class="article-row" aria-labelledby="{{ article.slug }}">
   <p class="meta">
     <time datetime="{{ article.date }}">{{ article.date | date(format=date_format) }}</time>
     {%- for term in article.taxonomies.categories | default(value=[]) %}
     <span class="sep" aria-hidden="true">·</span>
-    <span class="category">{{ term }}</span>
+    <a class="category" href="{{ get_taxonomy_url(kind="categories", name=term, lang=lang) | safe }}">{{ term }}</a>
     {%- endfor %}
   </p>
-  <h2><a href="{{ article.permalink | safe }}">{{ article.title }}</a></h2>
-  {{ article.summary | default(value=article.content) | safe }}
+  <h2 id="{{ article.slug }}"><a href="{{ article.permalink | safe }}">{{ article.title }}</a></h2>
+  {#- Written as a branch, not `article.summary | default(value=article.content) | safe`:
+      Tera drops a `| safe` that follows `| default`, so an article with no
+      `<!-- more -->` would render its body as escaped source. -#}
+  {% if article.summary %}{{ article.summary | safe }}{% else %}{{ article.content | safe }}{% endif %}
   {%- if article.taxonomies.tags | default(value=[]) | length > 0 %}
   {{ macros::pills(page=article, kinds=["tags"], lang=lang) }}
   {%- endif %}

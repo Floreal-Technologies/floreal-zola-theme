@@ -31,7 +31,7 @@
 
 .article-row h2 a:hover { text-decoration-color: var(--accent); }
 
-.article-row p {
+.article-row > p:not(.meta):not(.pills) {
   color: var(--ink-dim);
   max-width: 60ch;
   text-shadow: 0 1px 14px rgba(0, 0, 0, 0.7);
@@ -50,7 +50,7 @@
   color: var(--ink-dim);
 }
 
-.meta .category { color: var(--accent); }
+.meta .category { color: var(--accent); text-decoration: none; }
 .meta .sep { opacity: 0.6; }
 
 /* One term, wherever a term is shown. */
@@ -85,5 +85,62 @@
 
 .pager-count {
   color: var(--ink-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+/* One article's own page. */
+.article { margin-top: 0.75rem; }
+.article .pills { margin: 0 0 0.35rem; }
+.article > .meta { margin-top: 0.5rem; }
+
+.article-nav {
+  margin-top: clamp(2.5rem, 8vh, 4rem);
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.article-nav a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  max-width: 20rem;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.article-nav .to-older { text-align: right; margin-left: auto; }
+
+.article-nav .direction {
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.article-nav .to-title { text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 4px; }
+
+/* Every term of one taxonomy, with the number of articles under each. */
+.terms {
+  margin-top: clamp(2rem, 6vh, 3rem);
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.terms li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.term-count {
+  color: var(--ink-dim);
+  font-size: 0.8125rem;
   font-variant-numeric: tabular-nums;
 }

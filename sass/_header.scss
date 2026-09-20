@@ -48,7 +48,9 @@
   text-decoration-color: var(--accent);
 }
 
-/* The nav of pages, above the languages and sharing their row. */
+/* The nav of pages, above the languages, in its own row: `.brand-nav` stacks
+   its children in a column, so this nav sits above the languages rather than
+   sharing their row. */
 .pages {
   display: flex;
   align-items: baseline;

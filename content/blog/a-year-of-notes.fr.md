@@ -4,7 +4,7 @@ date = 2026-01-20
 description = "Une année d'entrées courtes, et ce qui les a gardées courtes."
 
 [taxonomies]
-tags = ["rust", "design"]
+tags = ["rust", "conception"]
 categories = ["notes"]
 +++
 

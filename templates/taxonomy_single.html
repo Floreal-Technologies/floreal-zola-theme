@@ -1,17 +1,35 @@
-{#- Replaced in full by the task that writes the term pages. -#}
+{#- The articles of one term. Shared by tags and categories, as the list is. -#}
 {% extends "base.html" %}
+
+{% block head_extra %}
+{%- if taxonomy.feed %}
+{%- for feed in config.feed_filenames %}
+{{ macros::feed_link(file=feed, href=term.permalink ~ feed, title=term.name) }}
+{%- endfor %}
+{%- endif %}
+{% endblock head_extra %}
 
 {% block main %}
   {%- set_global brand_is_title = false -%}
   {% include "partials/header.html" %}
 
+  {%- set_global crumb_titles = [trans(key="taxonomy_" ~ taxonomy.name, lang=lang)] -%}
+  {%- set_global crumb_urls = [get_url(path=taxonomy.slug ~ "/", lang=lang, trailing_slash=true)] -%}
+  {%- set_global crumb_current = term.name -%}
+  {% include "partials/crumbs.html" %}
+
   <h1 class="page-title">{{ term.name }}</h1>
 
+  {#- A term that paginates hands its articles over a page at a time, in
+      `paginator.pages`; one that does not keeps them all in `term.pages`. -#}
+  {%- if paginator is defined %}{% set articles = paginator.pages %}{% else %}{% set articles = term.pages %}{% endif %}
   {%- set date_format = config.extra.date_format | default(value="%Y-%m-%d") %}
 
   <div class="articles">
-  {%- for article in term.pages %}
+  {%- for article in articles %}
   {{ macros::article_row(article=article, date_format=date_format, lang=lang) }}
   {%- endfor %}
   </div>
+
+  {%- if paginator is defined %}{% include "partials/pager.html" %}{% endif %}
 {% endblock main %}

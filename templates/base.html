@@ -16,10 +16,16 @@
 {%- else -%}
   {%- set_global translations = [] -%}
 {%- endif -%}
+{%- set_global home_url = get_url(path="/", trailing_slash=true) -%}
+{%- for language in config.extra.languages -%}
+  {%- if language.code == lang -%}{%- set_global home_url = get_url(path=language.path, trailing_slash=true) -%}{%- endif -%}
+{%- endfor -%}
 {#- What the head says this page is. A taxonomy page carries neither `page` nor
     `section`, and a child template cannot reach the head, because the head is
     written before the child's block runs. So every kind of page is named here,
-    and the title, the description and the Open Graph tags all read these two. -#}
+    and the title, the description and the Open Graph tags all read these two.
+    A landing page, whose permalink is the home url, keeps the site's own
+    title, because the site's name is its title. -#}
 {%- set_global meta_title = config.title -%}
 {%- set_global meta_description = config.description -%}
 {%- if page is defined -%}
@@ -29,11 +35,10 @@
   {%- set_global meta_title = term.name ~ " — " ~ config.title -%}
 {%- elif taxonomy is defined -%}
   {%- set_global meta_title = trans(key="taxonomy_" ~ taxonomy.name, lang=lang) ~ " — " ~ config.title -%}
+{%- elif section is defined and section.permalink != home_url -%}
+  {%- set_global meta_title = section.title ~ " — " ~ config.title -%}
+  {%- set_global meta_description = section.description | default(value=config.description) -%}
 {%- endif -%}
-{%- set_global home_url = get_url(path="/", trailing_slash=true) -%}
-{%- for language in config.extra.languages -%}
-  {%- if language.code == lang -%}{%- set_global home_url = get_url(path=language.path, trailing_slash=true) -%}{%- endif -%}
-{%- endfor -%}
 <!doctype html>
 <html lang="{{ lang }}"{% if backdrop %} data-theme="{{ backdrop.id }}"{% endif %}>
 <head>
@@ -43,9 +48,11 @@
 <meta name="description" content="{{ meta_description }}">
 {%- if current_url is defined %}
 <link rel="canonical" href="{{ current_url | safe }}">
+{%- if translations | length > 0 %}
 {%- for language in config.extra.languages %}
 <link rel="alternate" hreflang="{{ language.code }}" href="{{ macros::lang_url(language=language, translations=translations) }}">
 {%- endfor %}
+{%- endif %}
 {%- endif %}
 {%- if config.extra.favicon %}
 <link rel="icon" href="{{ get_url(path=config.extra.favicon) | safe }}">

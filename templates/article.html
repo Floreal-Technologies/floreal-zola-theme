@@ -1,5 +1,3 @@
-{#- Replaced in full by the task that gives an article its terms and its
-    neighbours. -#}
 {% extends "base.html" %}
 
 {% block main %}
@@ -12,10 +10,37 @@
   {%- set_global crumb_current = page.title -%}
   {% include "partials/crumbs.html" %}
 
+  {%- set date_format = config.extra.date_format | default(value="%Y-%m-%d") -%}
+
   <article class="article">
+    {%- if page.taxonomies | length > 0 %}
+    {{ macros::pills(page=page, kinds=["categories", "tags"], lang=lang) }}
+    {%- endif %}
+
     <h1>{{ page.title }}</h1>
+    <p class="meta"><time datetime="{{ page.date }}">{{ page.date | date(format=date_format) }}</time></p>
+
     <div class="prose">
       {{ page.content | safe }}
     </div>
+
+    {#- The articles on either side. `lower` is the one above this in the
+        section's order, which under `sort_by = "date"` is the newer one. -#}
+    {%- if page.lower or page.higher %}
+    <nav class="article-nav" aria-label="{{ trans(key="article_nav", lang=lang) }}">
+      {%- if page.lower %}
+      <a class="to-newer" href="{{ page.lower.permalink | safe }}">
+        <span class="direction">{{ trans(key="newer_article", lang=lang) }}</span>
+        <span class="to-title">{{ page.lower.title }}</span>
+      </a>
+      {%- endif %}
+      {%- if page.higher %}
+      <a class="to-older" href="{{ page.higher.permalink | safe }}">
+        <span class="direction">{{ trans(key="older_article", lang=lang) }}</span>
+        <span class="to-title">{{ page.higher.title }}</span>
+      </a>
+      {%- endif %}
+    </nav>
+    {%- endif %}
   </article>
 {% endblock main %}
