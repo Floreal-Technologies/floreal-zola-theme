@@ -91,7 +91,7 @@
       if (isOpen() && event.relatedTarget && !nav.contains(event.relatedTarget)) setOpen(false);
     });
 
-    return { toggle: toggle, menu: menu, items: items, setOpen: setOpen, isOpen: isOpen };
+    return { toggle: toggle, menu: menu, items: items, setOpen: setOpen };
   }
 
   function backdrops() {

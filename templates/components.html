@@ -6,24 +6,28 @@
     A component sees only what it gets. A parameter written `@name` is
     implicit: Tera reads it from the calling template. -#}
 
-{#- The file names of one backdrop. `base` is the stem under `static/` that
-    each width is added to. The default is `img/<id>-`.
+{#- One file of one backdrop, at one width. `base` is the stem under `static/`
+    that the width is added to. The default is `img/<id>-`.
 
-    `widths` defaults to `[1000, 1600, 2560]`, the widths of the README recipe.
-    Every path goes through get_url(), so a sub-path also works. -#}
-{% component floreal.srcset(shot: map, ext: string) -%}
+    Every path goes through get_url(), so a sub-path also works. This is the
+    one place that names a backdrop file. -#}
+{% component floreal.shot_url(shot: map, w: number, ext: string) -%}
   {%- set base = shot.base or "img/" ~ shot.id ~ "-" -%}
+  {{- get_url(path=base ~ w ~ "." ~ ext) | safe -}}
+{%- endcomponent floreal.shot_url %}
+
+{#- The file of each width, for one kind of file. `widths` defaults to
+    `[1000, 1600, 2560]`, the widths of the README recipe. -#}
+{% component floreal.srcset(shot: map, ext: string) -%}
   {%- set widths = shot.widths or [1000, 1600, 2560] -%}
-  {%- for w in widths %}{{ get_url(path=base ~ w ~ "." ~ ext) | safe }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor -%}
+  {%- for w in widths %}{{ <floreal.shot_url shot={shot} w={w} ext={ext} /> }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor -%}
 {%- endcomponent floreal.srcset %}
 
 {#- The file for a browser with no srcset support: the largest width. It
     matches the intrinsic size in the markup. -#}
 {% component floreal.fallback(shot: map) -%}
-  {%- set base = shot.base or "img/" ~ shot.id ~ "-" -%}
   {%- set widths = shot.widths or [1000, 1600, 2560] -%}
-  {%- set widest = widths | last -%}
-  {{- get_url(path=base ~ widest ~ ".jpg") | safe -}}
+  {{- <floreal.shot_url shot={shot} w={widths | last} ext="jpg" /> -}}
 {%- endcomponent floreal.fallback %}
 
 {#- One theme string, from [extra.strings.<lang>]. English ships with the
@@ -163,15 +167,19 @@
 {%- endcomponent floreal.feed_links %}
 
 {#- The terms of one page, as pills. `kinds` lists the taxonomies to show, in
-    order. The caller first makes sure that the page has one term. -#}
+    order. A page with no term under any of them shows nothing at all, so no
+    caller has to ask first. -#}
 {% component floreal.pills(page: map, kinds: array, @lang) -%}
+{%- set filled = [kind for kind in kinds if (page.taxonomies?[kind] or []) | length > 0] -%}
+{%- if filled | length > 0 -%}
 <p class="pills">
-  {%- for kind in kinds %}
-  {%- for term in page.taxonomies?[kind] or [] %}
+  {%- for kind in filled %}
+  {%- for term in page.taxonomies[kind] %}
   <a class="pill" href="{{ get_taxonomy_url(kind=kind, term=term, lang=lang) | safe }}">{{ term }}</a>
   {%- endfor %}
   {%- endfor %}
 </p>
+{%- endif -%}
 {%- endcomponent floreal.pills %}
 
 {#- One article in a list: the date, the meta taxonomy, the title, the first
@@ -192,9 +200,6 @@
   {#- An if/else, not `summary | default(value=content) | safe`. Tera drops
       `| safe` after `| default`, so the HTML shows escaped. -#}
   {% if article.summary %}{{ article.summary | safe }}{% else %}{{ article.content | safe }}{% endif %}
-  {%- set filled = [kind for kind in pill_kinds if (article.taxonomies?[kind] or []) | length > 0] -%}
-  {%- if filled | length > 0 %}
   {{ <floreal.pills page={article} kinds={pill_kinds} /> }}
-  {%- endif %}
 </article>
 {%- endcomponent floreal.article_row %}

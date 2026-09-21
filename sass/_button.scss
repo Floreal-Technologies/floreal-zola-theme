@@ -1,3 +1,5 @@
+@use "vars";
+
 .actions {
   display: flex;
   flex-wrap: wrap;
@@ -9,17 +11,15 @@
 .btn {
   display: inline-block;
   padding: 0.6rem 1.1rem;
-  border-radius: 8px;
-  border: 1px solid var(--line);
   text-decoration: none;
   color: var(--ink);
   font-size: 0.95rem;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  @include vars.control;
 }
 
 .btn:hover, .btn:focus-visible {
   background: var(--tint);
-  border-color: color-mix(in oklab, var(--ink) 40%, transparent);
+  border-color: vars.$line-lift;
 }
 
 .btn-primary {

@@ -1,3 +1,5 @@
+@use "vars";
+
 /* The header drop-downs: the backdrop switcher and, once the script has folded
    the row of links into one, the language nav. Both are a trigger that opens a
    panel, so both are drawn by the rules below. */
@@ -12,16 +14,14 @@
   gap: 0.4rem;
   margin: 0;
   padding: 0.25rem 0.6rem;
-  border: 1px solid var(--line);
-  border-radius: 8px;
   background: var(--tint);
   color: var(--ink);
   font: inherit;
   cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  @include vars.control;
 }
 
-.menu-toggle:hover { border-color: color-mix(in oklab, var(--ink) 40%, transparent); }
+.menu-toggle:hover { border-color: vars.$line-lift; }
 
 /* The chevron, turned over when the panel is open. */
 .menu-toggle::after {

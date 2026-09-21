@@ -1,9 +1,9 @@
 @use "vars";
 
+/* Every transition of the theme, named once, so that a rule added later is
+   held by this one too. */
 @media (prefers-reduced-motion: reduce) {
-  .backdrop img { transition: none; }
-  .menu-toggle, .menu-toggle::after { transition: none; }
-  .card h2 a, .article-row h2 a { transition: none; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; }
 }
 
 /* The header bar and a card are the same panel, so they give up the same blur. */

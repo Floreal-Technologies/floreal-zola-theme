@@ -344,7 +344,7 @@ The components in `components.html`:
 | `floreal.article_row` | One article in a list |
 | `floreal.pills` | The terms of one page |
 | `floreal.actions`, `floreal.btn`, `floreal.href` | The buttons, and where they lead |
-| `floreal.srcset`, `floreal.fallback` | The URLs of one backdrop |
+| `floreal.shot_url`, `floreal.srcset`, `floreal.fallback` | The URLs of one backdrop. `floreal.shot_url` names one file, and the other two are built on it |
 | `floreal.lang_url`, `floreal.lang_label` | One page and one language in the nav |
 | `floreal.nav_key`, `floreal.nav_url` | The label key and the target of one header nav entry |
 | `floreal.feed_links` | The feeds of one thing |
@@ -372,12 +372,12 @@ they read `paginator`. Each one lists what it expects at the top.
 `themes/floreal/sass/floreal.scss` lists the stylesheet parts, in cascade
 order:
 
-- `_vars`: The width of the column, and the panel of a raised surface. Neither
-  can be a custom property: a media query cannot read one.
+- `_vars`: The width of the column, the panel of a raised surface, and the box
+  of a control. None can be a custom property: a media query cannot read one.
 - `_tokens`: The palette of each backdrop.
 - `_base`: The page, its links, and its two paragraph styles.
 - One file per component: `_header`, `_menu`, `_crumbs`, `_prose`, `_card`,
-  `_article`, `_button`, `_footer`, `_media`.
+  `_article`, `_terms`, `_button`, `_footer`, `_media`.
 
 Zola compiles them into one file, `/floreal.css`. The rules of a component stay
 in the file of that component.

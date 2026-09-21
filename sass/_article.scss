@@ -126,25 +126,3 @@
 }
 
 .article-nav .to-title { text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 4px; }
-
-/* Every term of one taxonomy, with the number of articles under each. */
-.terms {
-  margin-top: clamp(2rem, 6vh, 3rem);
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.terms li {
-  display: flex;
-  align-items: baseline;
-  gap: 0.35rem;
-}
-
-.term-count {
-  color: var(--ink-dim);
-  font-size: 0.8125rem;
-  font-variant-numeric: tabular-nums;
-}

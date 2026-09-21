@@ -27,9 +27,9 @@
   {%- set_global layout = section.extra?.layout or "" -%}
   {%- if not layout -%}
     {%- set_global layout = "cards" -%}
-    {%- for entry in entries -%}
-      {%- if entry.date -%}{%- set_global layout = "articles" -%}{%- endif -%}
-    {%- endfor -%}
+    {%- if [entry for entry in entries if entry.date] | length > 0 -%}
+      {%- set_global layout = "articles" -%}
+    {%- endif -%}
   {%- endif %}
 
   <h1 class="page-title">{{ section.title }}</h1>

@@ -1,14 +1,14 @@
 {#- The backdrop of this page: the one named by `default_backdrop`, or the
-    first of the list.
+    first of the list. The named one is put in front of the list, and the first
+    of that is taken.
 
     With no backdrop configured this is `false`, and the palette, the switcher
     and the image are left out. -#}
+{%- set_global named = [shot for shot in config.extra.backdrops if shot.id == config.extra.default_backdrop] -%}
+{%- set_global choices = [...named, ...config.extra.backdrops] -%}
 {%- set_global backdrop = false -%}
-{%- if config.extra.backdrops | length > 0 -%}
-  {%- set_global backdrop = config.extra.backdrops | first -%}
-  {%- for shot in config.extra.backdrops -%}
-    {%- if shot.id == config.extra.default_backdrop -%}{%- set_global backdrop = shot -%}{%- endif -%}
-  {%- endfor -%}
+{%- if choices | length > 0 -%}
+  {%- set_global backdrop = choices | first -%}
 {%- endif -%}
 {%- if page is defined -%}
   {%- set_global translations = page.translations -%}
@@ -22,11 +22,12 @@
 {#- The languages that the nav offers: the language of the site first, then
     the rest in alphabetical order.
 
-    `config.languages` has no fixed order, so the rest are sorted. A site with
-    its own order writes `extra.language_order`. -#}
+    Zola leaves the language of this page out of `config.languages`, so that
+    language is added back, and the rest have no fixed order, so they are
+    sorted. A site with its own order writes `extra.language_order`. -#}
 {%- set_global lang_codes = config.extra.language_order or [] -%}
 {%- if lang_codes | length == 0 -%}
-  {%- set_global other_langs = [code for code, options in config.languages if code != config.default_language and code != lang] -%}
+  {%- set_global other_langs = [code for code, options in config.languages if code != config.default_language] -%}
   {%- if lang != config.default_language -%}
     {%- set_global other_langs = [...other_langs, lang] -%}
   {%- endif -%}
@@ -48,15 +49,19 @@
     They are set here, not in each template, because the head renders before
     the block of a child template.
 
-    Two crumb lists, not a list of sections, because a taxonomy page has no
-    section. -#}
-{%- set_global meta_title = config.title -%}
+    One crumb above this page, not a list of sections, because a taxonomy page
+    has no section and no page names more than its own.
+
+    `page_name` is the name of this page. The title is that name and the name
+    of the site; the landing page and the 404 page name nothing, and carry the
+    name of the site alone. -#}
+{%- set_global page_name = "" -%}
 {%- set_global meta_description = config.description -%}
-{%- set_global crumb_titles = [] -%}
-{%- set_global crumb_urls = [] -%}
+{%- set_global crumb_title = "" -%}
+{%- set_global crumb_url = "" -%}
 {%- set_global crumb_current = "" -%}
 {%- if page is defined -%}
-  {%- set_global meta_title = page.title ~ " — " ~ config.title -%}
+  {%- set_global page_name = page.title -%}
   {%- set_global meta_description = page.description or config.description -%}
   {#- A page inside a section names that section between Home and itself. A
       standalone page has only the landing page above it.
@@ -68,23 +73,27 @@
       URL of the section. -#}
   {%- if page.ancestors | length > 1 -%}
     {%- set parent = get_section(path=page.ancestors | last, lang=page.lang, metadata_only=true) -%}
-    {%- set_global crumb_titles = [parent.title] -%}
-    {%- set_global crumb_urls = [parent.permalink] -%}
+    {%- set_global crumb_title = parent.title -%}
+    {%- set_global crumb_url = parent.permalink -%}
   {%- endif -%}
   {%- set_global crumb_current = page.title -%}
 {%- elif term is defined -%}
-  {%- set_global meta_title = term.name ~ " — " ~ config.title -%}
-  {%- set_global crumb_titles = [<floreal.label key={taxonomy.name} />] -%}
-  {%- set_global crumb_urls = [get_url(path=taxonomy.slug ~ "/", lang=lang, trailing_slash=true)] -%}
+  {%- set_global page_name = term.name -%}
+  {%- set_global crumb_title = <floreal.label key={taxonomy.name} /> -%}
+  {%- set_global crumb_url = get_url(path=taxonomy.slug ~ "/", lang=lang, trailing_slash=true) -%}
   {%- set_global crumb_current = term.name -%}
 {%- elif taxonomy is defined -%}
   {%- set_global taxonomy_title = <floreal.label key={taxonomy.name} /> -%}
-  {%- set_global meta_title = taxonomy_title ~ " — " ~ config.title -%}
+  {%- set_global page_name = taxonomy_title -%}
   {%- set_global crumb_current = taxonomy_title -%}
 {%- elif section is defined and not is_landing -%}
-  {%- set_global meta_title = section.title ~ " — " ~ config.title -%}
+  {%- set_global page_name = section.title -%}
   {%- set_global meta_description = section.description or config.description -%}
   {%- set_global crumb_current = section.title -%}
+{%- endif -%}
+{%- set_global meta_title = config.title -%}
+{%- if page_name -%}
+  {%- set_global meta_title = page_name ~ " — " ~ config.title -%}
 {%- endif -%}
 {#- The date format and the two taxonomy lists, resolved once for every
     template that shows a list or an article.
@@ -131,7 +140,7 @@ try {
 {%- if config.generate_feeds %}
 {{ <floreal.feed_links feeds={config.feed_filenames} base_href={home_url} title={config.title} /> }}
 {%- endif %}
-{%- if config.extra.backdrops | length > 0 %}
+{%- if backdrop %}
 {#- The palette and the credit of each backdrop, keyed by its id. Only this
     template knows the ids, so the stylesheet cannot hold them.
 

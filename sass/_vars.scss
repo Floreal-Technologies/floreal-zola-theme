@@ -12,3 +12,14 @@ $column: 46rem;
   backdrop-filter: blur(10px) saturate(115%);
   -webkit-backdrop-filter: blur(10px) saturate(115%);
 }
+
+/* A thing the reader presses: a trigger in the header, a button on a card or
+   a page. Both are the same bordered box, and both lift that border under the
+   pointer. */
+@mixin control {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+$line-lift: color-mix(in oklab, var(--ink) 40%, transparent);

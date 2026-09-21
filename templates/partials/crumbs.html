@@ -5,20 +5,21 @@
 
     A template that a site writes itself therefore also gets breadcrumbs.
 
-    Two lists, not a list of sections, because a taxonomy page has no section.
-    Its parent is a name from [extra.labels] and a URL from get_url(). -#}
+    One crumb above this page, not a list of sections, because a taxonomy page
+    has no section. Its parent is a name from [extra.labels] and a URL from
+    get_url(). -#}
 <nav class="crumbs" aria-label="{{ <floreal.t key="breadcrumb_nav" /> }}">
   <ol>
     <li>
       <a href="{{ home_url | safe }}">{{ <floreal.t key="home_label" /> }}</a>
       <span class="sep" aria-hidden="true">/</span>
     </li>
-    {%- for title in crumb_titles %}
+    {%- if crumb_title %}
     <li>
-      <a href="{{ crumb_urls[loop.index0] | safe }}">{{ title }}</a>
+      <a href="{{ crumb_url | safe }}">{{ crumb_title }}</a>
       <span class="sep" aria-hidden="true">/</span>
     </li>
-    {%- endfor %}
+    {%- endif %}
     <li><span aria-current="page">{{ crumb_current }}</span></li>
   </ol>
 </nav>

@@ -18,7 +18,7 @@
     {%- set_global kind = "standalone" -%}
   {%- endif %}
   <article class="{{ kind }}">
-    {%- if kind == "article" and page.taxonomies | length > 0 %}
+    {%- if kind == "article" %}
     {{ <floreal.pills page={page} kinds={[tax.name for tax in config.taxonomies]} /> }}
     {%- endif %}
     {%- if what %}

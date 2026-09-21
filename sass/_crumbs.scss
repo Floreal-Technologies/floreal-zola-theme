@@ -20,13 +20,3 @@
 .crumbs a { color: var(--ink-dim); }
 .crumbs a:hover { color: var(--ink); }
 .crumbs [aria-current="page"] { color: var(--ink); }
-
-.page-title, .product h1, .article h1 {
-  margin: 0.35rem 0 0;
-  font-size: clamp(1.7rem, 1.3rem + 1.8vw, 2.5rem);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  text-shadow: var(--title-glow);
-}
-
-.page-title { margin-top: 0.75rem; }

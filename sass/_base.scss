@@ -77,3 +77,16 @@ a:focus-visible { outline: var(--focus-ring); outline-offset: 3px; border-radius
   max-width: var(--measure);
   text-shadow: var(--text-glow);
 }
+
+/* The heading of a page, whatever the page holds. A standalone page names
+   itself `.page-title`; a product and an article are named by their own
+   wrapper. */
+.page-title, .product h1, .article h1 {
+  margin: 0.35rem 0 0;
+  font-size: clamp(1.7rem, 1.3rem + 1.8vw, 2.5rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-shadow: var(--title-glow);
+}
+
+.page-title { margin-top: 0.75rem; }
