@@ -1,6 +1,6 @@
-.product { margin-top: 0.75rem; }
+.item { margin-top: 0.75rem; }
 
-.product .what {
+.item .what {
   margin: 0;
   color: var(--accent);
 }
@@ -17,7 +17,7 @@
 
 /* Justified text, under `extra.justif.enabled`*/
 html[data-justif] .article .prose p,
-html[data-justif] .product .prose p {
+html[data-justif] .item .prose p {
   text-align: justify;
   hyphens: auto;
 }
@@ -45,5 +45,5 @@ html[data-justif] .product .prose p {
   font-size: 0.9em;
 }
 
-.product .actions,
+.item .actions,
 .standalone .actions { padding-top: 2rem; }

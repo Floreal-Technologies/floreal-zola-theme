@@ -9,7 +9,7 @@ punchline = "Software that says what it did, and proves it."
 
 [[extra.hero.actions]]
 label = "What we make"
-url = "@/products/_index.md"
+url = "@/items/_index.md"
 primary = true
 
 [[extra.hero.actions]]

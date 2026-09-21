@@ -1,11 +1,11 @@
-{#- Every page: an article, a product or a standalone page. Zola selects this
+{#- Every page: an article, an item or a standalone page. Zola selects this
     template itself, so no section names a `page_template`.
 
     A date makes a page an article: the date, its terms, and the article on
     each side.
 
-    `extra.what` makes it a product: the line that says what the product is,
-    and the buttons. A page with neither is standalone. -#}
+    `extra.what` makes it an item: the line that says what the item is, and
+    the buttons. A page with neither is standalone. -#}
 {% extends "base.html" %}
 
 {% block main %}
@@ -13,7 +13,7 @@
   {%- if page.date -%}
     {%- set_global kind = "article" -%}
   {%- elif what -%}
-    {%- set_global kind = "product" -%}
+    {%- set_global kind = "item" -%}
   {%- else -%}
     {%- set_global kind = "standalone" -%}
   {%- endif %}

@@ -1,4 +1,4 @@
-{#- Every section: the blog, the products, and any section added later.
+{#- Every section: the blog, the items, and any section added later.
 
     Zola selects this template itself, so a new section needs no `template` in
     its front matter and cannot fall back to the Zola placeholder.
@@ -40,7 +40,7 @@
   {%- else %}
   <section class="cards" aria-label="{{ section.title }}">
   {%- for entry in entries %}
-  {{ <floreal.card product={entry} here={current_url} /> }}
+  {{ <floreal.card page={entry} here={current_url} /> }}
   {%- endfor %}
   </section>
   {%- endif %}

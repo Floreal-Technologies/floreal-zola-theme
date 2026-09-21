@@ -1,5 +1,5 @@
 name = "Floréal"
-description = "A theme with a full-bleed backdrop that the reader can switch, a header bar with the pages, a landing card, products, a blog, and any number of languages."
+description = "A theme with a full-bleed backdrop that the reader can switch, a header bar with the pages, a landing card, items, a blog, and any number of languages."
 license = "GPL-3.0-only"
 homepage = "https://github.com/Floreal-Technologies/floreal-technologies.github.io"
 min_version = "0.23.0"

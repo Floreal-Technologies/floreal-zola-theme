@@ -7,7 +7,7 @@ what = "Un outil"
 
 [[extra.actions]]
 label = "À propos de Lanterne"
-url = "@/products/lantern.fr.md"
+url = "@/items/lantern.fr.md"
 where = "card"
 primary = true
 

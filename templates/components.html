@@ -115,7 +115,7 @@
 <a class="btn{% if action.primary %} btn-primary{% endif %}" href="{{ <floreal.href action={action} /> }}">{{ action.label }}</a>
 {%- endcomponent floreal.btn %}
 
-{#- The row of buttons at the foot of a card or a product page. `where` is the
+{#- The row of buttons at the foot of a card or an item page. `where` is the
     row to show, "card" or "page".
 
     An action with no `where` is in both rows. An action that leads back to
@@ -144,15 +144,15 @@
 
     The card shows the actions of that page with `where = "card"`. `here` is
     the URL of the page that holds the card. -#}
-{% component floreal.card(product: map, here: string = "") -%}
-{%- set what = product.extra?.what or "" -%}
-<article class="card" aria-labelledby="{{ product.slug }}">
+{% component floreal.card(page: map, here: string = "") -%}
+{%- set what = page.extra?.what or "" -%}
+<article class="card" aria-labelledby="{{ page.slug }}">
   {%- if what %}
   <p class="what">{{ what }}</p>
   {%- endif %}
-  <h2 id="{{ product.slug }}"><a href="{{ product.permalink | safe }}">{{ product.title }}</a></h2>
-  {% if product.summary %}{{ product.summary | safe }}{% else %}{{ product.content | safe }}{% endif %}
-  {{ <floreal.actions actions={product.extra?.actions or []} where="card" here={here} /> }}
+  <h2 id="{{ page.slug }}"><a href="{{ page.permalink | safe }}">{{ page.title }}</a></h2>
+  {% if page.summary %}{{ page.summary | safe }}{% else %}{{ page.content | safe }}{% endif %}
+  {{ <floreal.actions actions={page.extra?.actions or []} where="card" here={here} /> }}
 </article>
 {%- endcomponent floreal.card %}
 

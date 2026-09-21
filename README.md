@@ -178,7 +178,7 @@ part-translated language still reads correctly.
 ### Justified text
 
 [justif](https://github.com/lyallcooper/justif) justifies the paragraphs of an
-article and of a product page the way TeX does, breaking a whole paragraph at
+article and of an item page the way TeX does, breaking a whole paragraph at
 once.
 
 ```toml
@@ -186,7 +186,7 @@ once.
 enabled = true
 ```
 
-It covers `.article .prose p` and `.product .prose p`, takes the hyphenation
+It covers `.article .prose p` and `.item .prose p`, takes the hyphenation
 dictionary from the `lang` of `<html>`, and loads justif 0.9.1 from jsDelivr
 with its integrity hash. A site that serves its own copy writes `src`, and
 `integrity` or an empty string.
@@ -296,7 +296,7 @@ height = 1707
 | `config.toml` | The site settings, `theme = "floreal"`, the names the site coins, the friends list and the backdrop list. See "Configuration" |
 | `content/_index.md` | The landing page: `extra.tagline` and `extra.hero`. See "The landing page" |
 | `content/about.md` | A standalone page, reached from the header bar. See "Adding a standalone page" |
-| `content/products/` | One file per product, per language, and the section that lists them |
+| `content/items/` | One file per item, per language, and the section that lists them. The name of the section is the site's own: `products/`, `work/`, anything |
 | `content/blog/` | One file per article, per language, and the section that lists and paginates them |
 | `themes/floreal/` | The theme: `theme.toml`, `templates/`, `sass/`, `static/floreal.js`, `static/icons/` |
 | `static/` | The files of the site: the backdrop images, the licenses, `CNAME` |
@@ -312,8 +312,8 @@ and `content/` directory of this repository are the demo site.
 | URL | Template | What it is |
 | --- | --- | --- |
 | `/`, `/fr/` | `index.html` | The landing page: the tagline, and one card with the punchline and the links |
-| `/products/`, `/fr/products/` | `section.html` | Every product, as cards |
-| `/products/<name>/` | `page.html` | One product, with its full text |
+| `/items/`, `/fr/items/` | `section.html` | Every item, as cards |
+| `/items/<name>/` | `page.html` | One item, with its full text |
 | `/blog/`, `/fr/blog/` | `section.html` | The first page of the article list |
 | `/blog/page/<n>/`, `/fr/blog/page/<n>/` | `section.html` | A later page of the same list |
 | `/blog/<article>/` | `page.html` | One article, with its terms and its neighbors |
@@ -330,12 +330,12 @@ Each template reads what its content carries:
   not. `extra.layout` in its front matter sets this directly.
 - A page with a date is an article. It shows the date, its terms, and the
   article on each side.
-- A page with `extra.what` is a product. A page with neither is standalone.
+- A page with `extra.what` is an item. A page with neither is standalone.
 
 Every page also does this:
 
 - The buttons of the landing card lead where the front matter sends them.
-- The title of a product card links to the page of that product.
+- The title of an item card links to the page of that item.
 - Every page except the landing page and the 404 page carries breadcrumbs.
 - The language nav switches to the same page in the other language. For an
   untranslated page it switches to the landing page of that language.
@@ -422,7 +422,7 @@ punchline = "Software that says what it did, and proves it."
 
 [[extra.hero.actions]]
 label = "What we make"
-url = "@/products/_index.md"
+url = "@/items/_index.md"
 primary = true
 
 [[extra.hero.actions]]
@@ -434,12 +434,12 @@ url = "@/blog/_index.md"
 | --- | --- |
 | `tagline` | The line under the site name. A landing page without it gets no line |
 | `hero.punchline` | The line on the card. A landing page with no `[extra.hero]` gets no card |
-| `hero.actions` | The buttons under it, in the order written. The fields are those of a product action: `label`, `url`, `primary`, `where`. A landing page without them gets a card and no buttons |
+| `hero.actions` | The buttons under it, in the order written. The fields are those of an item action: `label`, `url`, `primary`, `where`. A landing page without them gets a card and no buttons |
 
-The `url` of an action reads like the `url` of a product. A full URL stands as
+The `url` of an action reads like the `url` of an item. A full URL stands as
 written.
 
-A value such as `@/products/_index.md`, or a path that starts with `/`, is a
+A value such as `@/items/_index.md`, or a path that starts with `/`, is a
 page of this site. The theme builds the full URL from it.
 
 Use the `@/` form. Zola resolves it to the address of that page and stops the
@@ -447,10 +447,10 @@ build if the file is absent.
 
 The French landing page names its own files, such as `@/blog/_index.fr.md`.
 
-The card shows the actions of a product card. An action with `where = "page"`
+The card shows the actions of an item card. An action with `where = "page"`
 is left out, and so is an action that leads to the landing page.
 
-Sections are not cards. The header bar reaches `/products/`, `/blog/`, `/tags/`
+Sections are not cards. The header bar reaches `/items/`, `/blog/`, `/tags/`
 and `/categories/` through `[[extra.nav]]`.
 
 ## Adding a standalone page
@@ -475,7 +475,7 @@ belongs to no section and carries no date.
    about = "À propos"
    ```
 
-`[[extra.actions]]` works here as on a product page. It gives a row of buttons
+`[[extra.actions]]` works here as on an item page. It gives a row of buttons
 under the text.
 
 The row holds the actions with `where = "page"` and the actions with no
@@ -484,9 +484,13 @@ The row holds the actions with `where = "page"` and the actions with no
 The breadcrumbs read Home / this page. A page inside a section names that
 section between the two.
 
-## Adding a product
+## Adding an item
 
-1. If `content/products/_index.md` and `_index.fr.md` do not exist, write them
+An item is a page that says what it is: a tool, a service, a book, a record.
+The theme reads `extra.what`, never the path, so the section may carry any
+name. The demo calls it `items/`.
+
+1. If `content/items/_index.md` and `_index.fr.md` do not exist, write them
    first:
 
    ```toml
@@ -496,37 +500,37 @@ section between the two.
    +++
    ```
 
-   The pages carry no dates, so the section shows cards. If a product ever
+   The pages carry no dates, so the section shows cards. If an item ever
    carries a date, `extra.layout = "cards"` sets this directly.
-2. Write `content/products/<name>.md` and `content/products/<name>.fr.md`. Two
+2. Write `content/items/<name>.md` and `content/items/<name>.fr.md`. Two
    keys are optional:
    - `extra.what`: The label above the title. It also tells `page.html` that
-     the page is a product.
+     the page is an item.
    - `[[extra.actions]]`: One entry per button.
 
    | Key | What it does |
    | --- | --- |
    | `label` | The word on the button |
-   | `url` | Where the button leads. A full URL stands as written. A value such as `@/products/<name>.md`, or a path that starts with `/`, is a page of this site, and the theme builds the full URL from it |
+   | `url` | Where the button leads. A full URL stands as written. A value such as `@/items/<name>.md`, or a path that starts with `/`, is a page of this site, and the theme builds the full URL from it |
    | `primary` | `true` on the one action for the reader to take. One per row at most |
    | `where` | The row of the button: `"card"`, `"page"` or `"both"`. A button with no `where` is in both rows |
 
-   `where` separates the two rows. The card holds the link to the product
-   page, and the page holds what the reader does next.
+   `where` separates the two rows. The card holds the link to the item page,
+   and the page holds what the reader does next.
 
    A button that leads to the page that the reader is on is left out.
 
-   The body is the text of the product page.
+   The body is the text of the item page.
 3. Put `<!-- more -->` after the first sentences. The page always shows the
    full body.
 
    The card shows only the text above the marker. With no marker it shows the
    full body.
 
-The product page and its card on `/products/` come from the file alone, and
-`/products/` sorts by title.
+The item page and its card on `/items/` come from the file alone, and
+`/items/` sorts by title.
 
-The landing page shows no product. It shows one card of its own, with a button
+The landing page shows no item. It shows one card of its own, with a button
 that leads here.
 
 ## Adding an article
