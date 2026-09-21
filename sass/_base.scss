@@ -32,15 +32,9 @@ body {
 /* Held at 0 while the next backdrop decodes. */
 .backdrop.swapping img { opacity: 0; }
 
-/* Every page but the landing page is one to read, so the photo behind it goes
-   soft and the words come forward. The picture is grown by twice the blur and
-   pulled back by it, so the blur's own soft edge falls outside the window.
-   A site that wants a sharp photo behind an article sets `--backdrop-blur: 0`. */
-body:not(.landing) .backdrop img {
-  width: calc(100% + 32 * var(--backdrop-blur));
-  height: calc(100% + 32 * var(--backdrop-blur));
-  margin: calc(-16 * var(--backdrop-blur));
-  filter: blur(var(--backdrop-blur));
+body:not(.landing) .backdrop::after {
+  backdrop-filter: blur(var(--backdrop-blur));
+  -webkit-backdrop-filter: blur(var(--backdrop-blur));
 }
 
 .backdrop::after {
