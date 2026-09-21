@@ -1,6 +1,9 @@
 .product { margin-top: 0.75rem; }
 
-.product .what { margin: 0; }
+.product .what {
+  margin: 0;
+  color: var(--accent);
+}
 
 .prose {
   margin-top: 1rem;
