@@ -140,6 +140,11 @@ try {
 } catch (e) {}
 {%- endif %}
 </script>
+{%- if config.markdown?.highlighting?.style == "class" %}
+{#- The colours of a code block, ahead of the stylesheet that draws the ground
+    they are read on. -#}
+<link rel="stylesheet" href="{{ get_url(path="giallo.css") | safe }}">
+{%- endif %}
 <link rel="stylesheet" href="{{ get_url(path="floreal.css", cachebust=true) | safe }}">
 {%- if justified %}
 {#- justif upgrades the paragraphs that the stylesheet justifies, and takes its

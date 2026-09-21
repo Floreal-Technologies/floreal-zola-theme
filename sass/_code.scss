@@ -1,0 +1,69 @@
+@use "vars";
+
+/* A block of code is the panel a card is. The colours inside it are the
+   highlighter's; what is here is the ground they are read on, the line around
+   it, and the way the block behaves when a line runs past the column. */
+pre {
+  margin: 1.5rem 0;
+  border: 1px solid var(--code-line);
+  border-radius: 14px;
+  background: var(--code-bg);
+  box-shadow: var(--panel-shadow);
+  /* A long line scrolls the block, not the page. The padding is on the code
+     inside, so the right-hand air survives the scroll. */
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  /* The glow that holds prose off a photograph smears a monospace grid. */
+  text-shadow: none;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+/* The bar shows itself when the pointer is on the block, and takes the colour
+   of the line around it. */
+pre:hover { scrollbar-color: var(--code-line) transparent; }
+pre::-webkit-scrollbar { height: 6px; }
+pre::-webkit-scrollbar-thumb { background: transparent; border-radius: 999px; }
+pre:hover::-webkit-scrollbar-thumb { background: var(--code-line); }
+
+/* One class and one element, so the ground is the theme's and not the one
+   `.z-code` carries. */
+pre.giallo { background: var(--code-bg); }
+
+pre > code {
+  display: block;
+  padding: 1rem 1.25rem;
+  font-family: var(--mono);
+  font-size: 0.875em;
+  line-height: 1.55;
+  tab-size: 4;
+}
+
+/* A line of a numbered block, and the number in front of it. The line takes
+   the full width, so a highlighted one is coloured across the block and not up
+   to its last word. */
+.giallo-l {
+  display: inline-block;
+  min-height: 1lh;
+  width: 100%;
+}
+
+.giallo-ln {
+  display: inline-block;
+  user-select: none;
+  margin-right: 0.4em;
+  padding: 0.4em;
+  min-width: 3ch;
+  text-align: right;
+  opacity: 0.8;
+}
+
+/* Narrower than the column: the block runs into the gutter of the page, the
+   way a photograph would, and gives up the corners it no longer has room for. */
+@media (max-width: vars.$column) {
+  pre {
+    margin-inline: -1rem;
+    border-inline: 0;
+    border-radius: 0;
+  }
+}

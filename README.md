@@ -193,6 +193,14 @@ with its integrity hash. A site that serves its own copy writes `src`, and
 
 The tag blocks the first paint, so no line re-flows.
 
+### Code blocks
+
+```toml
+[markdown.highlighting]
+theme = "catppuccin-mocha"
+style = "class"
+```
+
 ### A config.toml that uses all of it
 
 ```toml
@@ -207,6 +215,10 @@ taxonomies = [
   { name = "tags" },
   { name = "categories" },
 ]
+
+[markdown.highlighting]
+theme = "catppuccin-mocha"
+style = "class"
 
 [languages.fr]
 title = "Floréal"
@@ -398,8 +410,8 @@ order:
   of a control. None can be a custom property: a media query cannot read one.
 - `_tokens`: The palette of each backdrop.
 - `_base`: The page, its links, and its two paragraph styles.
-- One file per component: `_header`, `_menu`, `_crumbs`, `_prose`, `_card`,
-  `_article`, `_terms`, `_button`, `_footer`, `_media`.
+- One file per component: `_header`, `_menu`, `_crumbs`, `_prose`, `_code`,
+  `_card`, `_article`, `_terms`, `_button`, `_footer`, `_media`.
 
 Zola compiles them into one file, `/floreal.css`. The rules of a component stay
 in the file of that component.
@@ -585,7 +597,8 @@ theme:
 4. Add `[extra.backdrops.palette]` in the same block, with any of these keys:
    `ink`, `ink-dim`, `line`, `tint`, `card`, `card-solid`, `accent`, `sand`,
    `sand-lift`, `on-sand`, `bg`, `focus-pos`, `scrim`, `text-glow`,
-   `title-glow`, `panel-shadow`, `focus-ring`, `measure`, `backdrop-blur`.
+   `title-glow`, `panel-shadow`, `focus-ring`, `measure`, `backdrop-blur`,
+   `code-bg`, `code-line`, `mono`.
    Each key becomes a CSS variable for that backdrop. With no palette, the
    theme uses the default in `themes/floreal/sass/_tokens.scss`.
 

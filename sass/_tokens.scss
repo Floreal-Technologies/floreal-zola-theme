@@ -28,4 +28,10 @@
      is being read is softened. */
   --measure: 70ch;
   --backdrop-blur: 4px;
+  /* The ground a block of code stands on, and the line around it. Both follow
+     the card, which is what a backdrop already tints. */
+  --code-bg: var(--card-solid);
+  --code-line: var(--line);
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
 }

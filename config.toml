@@ -19,6 +19,12 @@ taxonomies = [
   { name = "categories", feed = true },
 ]
 
+# The colours of a code block. The theme links the file this writes, and keeps
+# the ground under the colours, so the backdrop goes on tinting it.
+[markdown.highlighting]
+theme = "catppuccin-mocha"
+style = "class"
+
 [languages.fr]
 title = "Floréal"
 description = "Une façade, et les notes qu'elle garde."

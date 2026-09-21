@@ -38,11 +38,16 @@ html[data-justif] .item .prose p {
 .prose ul, .prose ol { padding-left: 1.25rem; }
 .prose li { margin: 0.35rem 0; }
 
-.prose code {
+/* A span of code inside a sentence. The block that stands on its own is drawn
+   in `_code.scss`, and `:not(pre)` keeps the pill off it: a `<code>` in a
+   `<pre>` already has a panel behind it. */
+.prose :not(pre) > code {
   padding: 0.1em 0.35em;
   border-radius: 4px;
   background: var(--tint);
+  font-family: var(--mono);
   font-size: 0.9em;
+  text-shadow: none;
 }
 
 .item .actions,
