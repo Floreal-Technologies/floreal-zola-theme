@@ -127,7 +127,11 @@
 {%- for action in actions -%}
   {%- set place = action.where or "both" -%}
   {%- set target = <floreal.href action={action} /> -%}
-  {%- if (place == where or place == "both") and target != here -%}
+  {#- A trailing slash is not part of the address, and get_url() and
+      current_url do not agree on it, so neither side keeps one. -#}
+  {%- set target = target | trim_end(pat="/") -%}
+  {%- set spot = here | trim_end(pat="/") -%}
+  {%- if (place == where or place == "both") and target != spot -%}
     {%- set_global shown = [...shown, action] -%}
   {%- endif -%}
 {%- endfor -%}
