@@ -56,6 +56,7 @@ The `<title>` of a page comes from one of these:
 | `language_order` | list of strings | The order of the language nav. Unset, the language of the site comes first and the rest follow in alphabetical order |
 | `date_format` | string | The format of a date on the page, in the syntax of the Zola `date` filter |
 | `meta_taxonomy` | string | The taxonomy shown beside the date of an article. The default is `categories`. Every other taxonomy shows as terms under the article |
+| `justif` | table | Justified article paragraphs, broken by [justif](https://github.com/lyallcooper/justif). Off by default. See "Justified text" |
 
 ### A backdrop
 
@@ -174,6 +175,22 @@ part-translated language still reads correctly.
 | `newer_article` | The label over the link to the newer article |
 | `older_article` | The label over the link to the older article |
 
+### Justified text
+
+[justif](https://github.com/lyallcooper/justif) justifies the paragraphs of an
+article the way TeX does, breaking a whole paragraph at once.
+
+```toml
+[extra.justif]
+enabled = true
+```
+
+It covers `.article .prose p`, takes the hyphenation dictionary from the `lang`
+of `<html>`, and loads justif 0.9.1 from jsDelivr with its integrity hash. A
+site that serves its own copy writes `src`, and `integrity` or an empty string.
+
+The tag blocks the first paint, so no line re-flows.
+
 ### A config.toml that uses all of it
 
 ```toml
@@ -200,6 +217,9 @@ taxonomies = [
 [extra]
 favicon = "img/favicon.png"
 default_backdrop = "mountains"
+
+[extra.justif]
+enabled = true
 
 [extra.labels.en]
 about = "About"

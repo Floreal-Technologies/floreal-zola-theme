@@ -26,6 +26,13 @@ date_format = "%Y-%m-%d"
 meta_taxonomy = "categories"
 favicon = ""
 
+# Justified article text, broken by justif. Off by default: it fetches a
+# third-party script that holds the first paint. README.md, "Justified text".
+[extra.justif]
+enabled = false
+src = "https://cdn.jsdelivr.net/npm/justif@0.9.1/dist/auto.js"
+integrity = "sha384-Vb3imj2Dz+GDKt+QWPv0OfksiGXnqOAruRF7Uxdw0WEejuoPzDt8+AjL9JzmkzDt"
+
 # The theme strings. A site translates one string by naming that key under
 # [extra.strings.<lang>]. The rest fall back to the English here, so a
 # part-translated language still reads correctly.
