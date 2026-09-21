@@ -103,8 +103,12 @@
 {%- set_global date_format = config.extra.date_format -%}
 {%- set_global meta_taxonomy = config.extra.meta_taxonomy -%}
 {%- set_global pill_kinds = [tax.name for tax in config.taxonomies if tax.name != meta_taxonomy] -%}
+{#- Justified article text. `data-justif` carries the choice to the stylesheet,
+    which is compiled before any config is read. -#}
+{%- set_global justif = config.extra.justif -%}
+{%- set_global justified = justif?.enabled and justif?.src -%}
 <!doctype html>
-<html lang="{{ lang }}" dir="{{ text_direction(lang=lang) }}"{% if backdrop %} data-theme="{{ backdrop.id }}"{% endif %}>
+<html lang="{{ lang }}" dir="{{ text_direction(lang=lang) }}"{% if backdrop %} data-theme="{{ backdrop.id }}"{% endif %}{% if justified %} data-justif{% endif %}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -137,6 +141,12 @@ try {
 {%- endif %}
 </script>
 <link rel="stylesheet" href="{{ get_url(path="floreal.css", cachebust=true) | safe }}">
+{%- if justified %}
+{#- justif upgrades the paragraphs that the stylesheet justifies, and takes its
+    hyphenation dictionary from the `lang` of <html>. `blocking="render"` holds
+    the first paint rather than let the reader watch the lines re-flow. -#}
+<script type="module" blocking="render" src="{{ justif.src | safe }}"{% if justif?.integrity %} integrity="{{ justif.integrity }}" crossorigin="anonymous"{% endif %}></script>
+{%- endif %}
 {%- if config.generate_feeds %}
 {{ <floreal.feed_links feeds={config.feed_filenames} base_href={home_url} title={config.title} /> }}
 {%- endif %}
