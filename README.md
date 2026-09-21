@@ -178,16 +178,18 @@ part-translated language still reads correctly.
 ### Justified text
 
 [justif](https://github.com/lyallcooper/justif) justifies the paragraphs of an
-article the way TeX does, breaking a whole paragraph at once.
+article and of a product page the way TeX does, breaking a whole paragraph at
+once.
 
 ```toml
 [extra.justif]
 enabled = true
 ```
 
-It covers `.article .prose p`, takes the hyphenation dictionary from the `lang`
-of `<html>`, and loads justif 0.9.1 from jsDelivr with its integrity hash. A
-site that serves its own copy writes `src`, and `integrity` or an empty string.
+It covers `.article .prose p` and `.product .prose p`, takes the hyphenation
+dictionary from the `lang` of `<html>`, and loads justif 0.9.1 from jsDelivr
+with its integrity hash. A site that serves its own copy writes `src`, and
+`integrity` or an empty string.
 
 The tag blocks the first paint, so no line re-flows.
 

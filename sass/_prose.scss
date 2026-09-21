@@ -15,13 +15,13 @@
 .prose > :first-child { margin-top: 0; }
 .prose p, .prose ul, .prose ol { margin: 0.85rem 0; }
 
-/* Justified article text, under `extra.justif.enabled`. Also the fallback with
-   no script, and what justif reads: it upgrades only what computes to
-   `justify`, and `hyphens: none` would turn its hyphenation off. */
-html[data-justif] .article .prose p {
+/* Justified text, under `extra.justif.enabled`*/
+html[data-justif] .article .prose p,
+html[data-justif] .product .prose p {
   text-align: justify;
   hyphens: auto;
 }
+
 .prose strong {
   font-weight: 600;
 }
