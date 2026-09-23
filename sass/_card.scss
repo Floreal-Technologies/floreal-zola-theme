@@ -3,7 +3,7 @@
 .cards {
   margin-top: clamp(2.5rem, 8vh, 4.5rem);
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+  /* grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr)); */
   gap: clamp(1rem, 0.75rem + 1vw, 1.5rem);
   align-items: stretch;
 }
@@ -22,9 +22,6 @@
   letter-spacing: -0.01em;
 }
 
-/* A heading that is a way in: the line under it is drawn only when the pointer
-   is on it. An article row's heading is the same thing, and says so in
-   `_article.scss`. */
 .card h2 a { color: inherit; }
 
 .card .what {
@@ -38,8 +35,6 @@
 .card p { color: var(--ink-dim); }
 .card p strong { color: var(--ink); font-weight: 600; }
 
-/* The one card in the middle of the landing page: the line that says what the
-   software is for, and the two ways into the site under it. */
 .card-hero {
   margin-top: clamp(2.5rem, 8vh, 4.5rem);
   text-align: center;
