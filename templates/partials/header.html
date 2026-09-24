@@ -14,9 +14,9 @@
     script does the backdrop switch. -#}
 <header class="brand">
   {%- if brand_is_title %}
-  <h1>{{ config.title }}</h1>
+  <h1>{{ <floreal.logo class="brand-logo" /> }}{{ config.title }}</h1>
   {%- else %}
-  <p class="brand-home"><a href="{{ home_url | safe }}">{{ config.title }}</a></p>
+  <p class="brand-home"><a href="{{ home_url | safe }}">{{ <floreal.logo class="brand-logo" /> }}{{ config.title }}</a></p>
   {%- endif %}
   <div class="brand-nav">
     {%- set nav = config.extra.nav or [] -%}

@@ -25,6 +25,8 @@ language_order = []
 date_format = "%Y-%m-%d"
 meta_taxonomy = "categories"
 favicon = ""
+logo = ""
+logo_tint = true
 
 # Justified article text, broken by justif. Off by default: it fetches a
 # third-party script that holds the first paint. README.md, "Justified text".

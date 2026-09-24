@@ -1,16 +1,3 @@
-{#- The parts a page is built from. Tera 2 registers every component here, so
-    no template imports this file.
-
-    The `floreal.` prefix separates them from the components of a site.
-
-    A component sees only what it gets. A parameter written `@name` is
-    implicit: Tera reads it from the calling template. -#}
-
-{#- One file of one backdrop, at one width. `base` is the stem under `static/`
-    that the width is added to. The default is `img/<id>-`.
-
-    Every path goes through get_url(), so a sub-path also works. This is the
-    one place that names a backdrop file. -#}
 {% component floreal.shot_url(shot: map, w: number, ext: string) -%}
   {%- set base = shot.base or "img/" ~ shot.id ~ "-" -%}
   {{- get_url(path=base ~ w ~ "." ~ ext) | safe -}}
@@ -30,23 +17,23 @@
   {{- <floreal.shot_url shot={shot} w={widths | last} ext="jpg" /> -}}
 {%- endcomponent floreal.fallback %}
 
-{#- One theme string, from [extra.strings.<lang>]. English ships with the
-    theme, in theme.toml.
+{% component floreal.logo(class: string, @config) -%}
+  {%- set logo = config.extra?.logo or "" -%}
+  {%- if logo -%}
+    {%- set src = get_url(path=logo) -%}
+    {%- if config.extra?.logo_tint -%}
+      <span class="logo {{ class }}" style="--logo-src: url('{{ src | safe }}')" aria-hidden="true"></span>
+    {%- else -%}
+      <img class="logo {{ class }}" src="{{ src | safe }}" alt="">
+    {%- endif -%}
+  {%- endif -%}
+{%- endcomponent floreal.logo %}
 
-    A site overrides one string by naming that key. Zola keeps the rest.
-
-    The lookup uses `?.` because a language with no table is a missing table
-    two levels down, which Tera 2 treats as an error. -#}
 {% component floreal.t(key: string, @config, @lang) -%}
   {%- set english = config.extra?.strings?.en?[key] or key -%}
   {{- config.extra?.strings?[lang]?[key] or english -}}
 {%- endcomponent floreal.t %}
 
-{#- The name of a thing, from [extra.labels.<lang>]. One table names a nav
-    entry, a taxonomy and a backdrop.
-
-    A key that the table does not name shows as written, with dashes and
-    underscores as spaces: "release-notes" becomes "Release Notes". -#}
 {% component floreal.label(key: string, @config, @lang) -%}
   {%- set human = key | replace(from="-", to=" ") | replace(from="_", to=" ") | title -%}
   {{- config.extra?.labels?[lang]?[key] or human -}}

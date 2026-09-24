@@ -1,10 +1,5 @@
 @use "vars";
 
-/* Header: one bar across the top of the page. The house name sits at one end,
-   and the three navs at the other: the pages, the backdrop switcher, the
-   languages. The bar is drawn the way a card is, so the two read as one house.
-   It is raised above the page, or the switcher's panel is painted under what
-   follows it. */
 .brand {
   position: relative;
   z-index: 2;
@@ -17,8 +12,6 @@
   @include vars.panel;
 }
 
-/* The name reads the same on every page: the landing page says it as its
-   heading, the others as the way back. */
 .brand h1,
 .brand-home {
   margin: 0;
@@ -29,8 +22,19 @@
 
 .brand-home a { color: var(--ink); text-decoration-color: var(--accent); }
 
-/* The three navs sit close together: the bar holds them on the house name's own
-   line in every language, and French words are the long ones. */
+.brand h1,
+.brand-home a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.brand-logo {
+  flex: none;
+  width: 1.75em;
+  height: 1.75em;
+}
+
 .brand-nav {
   display: flex;
   align-items: center;
@@ -49,8 +53,6 @@
 .pages a { color: var(--ink-dim); }
 .pages a:hover { color: var(--ink); }
 
-/* The page the reader is on, and the section it sits in: `aria-current="page"`
-   for the one, `"true"` for the other, and the same mark for both. */
 .pages [aria-current] {
   color: var(--ink);
   text-decoration-color: var(--accent);

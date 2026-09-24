@@ -17,6 +17,7 @@
   {%- set hero = section.extra?.hero or false -%}
   {%- if hero %}
   <article class="card card-hero">
+    {{ <floreal.logo class="hero-logo" /> }}
     <p class="punchline">{{ hero.punchline }}</p>
     {{ <floreal.actions actions={hero.actions or []} where="card" here={current_url} /> }}
   </article>

@@ -48,6 +48,8 @@ The `<title>` of a page comes from one of these:
 | `default_backdrop` | string | The `id` of the backdrop that every page ships with. An empty or unknown id selects the first backdrop |
 | `friends` | list of tables | The links in the footer. A site with no friend and no backdrop gets no footer |
 | `favicon` | string | A path under `static/`, such as `img/favicon.png`. Unset, the page asks for no icon |
+| `logo` | string | A path under `static/`. Shown left of the site name and over the landing card when set. See "A logo" |
+| `logo_tint` | boolean | `true` paints the logo with the colour of the backdrop. `false` shows the file as it is. The default is `true` |
 | `nav` | list of tables | The pages linked from the header, beside the language nav. An empty list gives no nav |
 | `labels` | table of tables | The name of a thing, per language, under `[extra.labels.<lang>]`. One table names a nav entry by its path, a taxonomy by its name, and a backdrop by its id |
 | `backdrop_credits` | table of tables | The credit line for one photographer, under `[extra.backdrop_credits.<lang>]`, one entry per backdrop id. HTML stands as written. A backdrop with no line gets no credit |
@@ -69,6 +71,25 @@ The `<title>` of a page comes from one of these:
 | `base` | Optional. The path of the files under `static/`, with no leading slash, up to the width. The default is `img/<id>-` |
 | `widths` | Optional. The widths that exist, smallest first. The default is `[1000, 1600, 2560]`, which the recipe under "Adding a background" makes. A browser with no `srcset` support gets the largest width |
 | `palette` | Optional. See "Adding a background" |
+
+### A logo
+
+`extra.logo` puts a logo left of the site name, in the header of every page.
+It also puts a larger copy over the line of the landing card.
+
+With `logo_tint = true`, the theme uses only the shape of the file. It paints
+the shape with the `logo` key of the palette of the backdrop, or with its
+`accent` if the palette has no `logo`.
+
+With `logo_tint = false`, the file shows with its own colours.
+
+```toml
+[extra]
+logo = "img/logo.svg"
+
+[extra.backdrops.palette]
+logo = "#c87a4b"
+```
 
 ### Languages
 
@@ -230,6 +251,7 @@ taxonomies = [
 
 [extra]
 favicon = "img/favicon.png"
+logo = "img/logo.svg"
 default_backdrop = "mountains"
 
 [extra.justif]
@@ -420,8 +442,8 @@ in the file of that component.
 
 `/` and `/fr/` show `extra.tagline` from `content/_index.md`.
 
-Under it they show one card: the line that says what the software does, and
-the buttons that lead into the site.
+Under it they show one card: the logo from `extra.logo`, the line that says
+what the software does, and the buttons that lead into the site.
 
 The landing page writes both, in each language.
 
@@ -595,8 +617,8 @@ theme:
    Both are optional. With no label the button shows the id. With no line the
    backdrop gets no credit.
 4. Add `[extra.backdrops.palette]` in the same block, with any of these keys:
-   `ink`, `ink-dim`, `line`, `tint`, `card`, `card-solid`, `accent`, `sand`,
-   `sand-lift`, `on-sand`, `bg`, `focus-pos`, `scrim`, `text-glow`,
+   `ink`, `ink-dim`, `line`, `tint`, `card`, `card-solid`, `accent`, `logo`,
+   `sand`, `sand-lift`, `on-sand`, `bg`, `focus-pos`, `scrim`, `text-glow`,
    `title-glow`, `panel-shadow`, `focus-ring`, `measure`, `backdrop-blur`,
    `code-bg`, `code-line`, `mono`.
    Each key becomes a CSS variable for that backdrop. With no palette, the
