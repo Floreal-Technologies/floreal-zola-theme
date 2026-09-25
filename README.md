@@ -623,6 +623,10 @@ theme:
    `code-bg`, `code-line`, `mono`.
    Each key becomes a CSS variable for that backdrop. With no palette, the
    theme uses the default in `themes/floreal/sass/_tokens.scss`.
+   The following keys are derived:
+   * `line`, `tint` from `ink`;
+   * `card-solid` from `card`;
+   * `sand-lift`, `on-sand` from `sand`.
 
 A credit shows only when its backdrop is active.
 

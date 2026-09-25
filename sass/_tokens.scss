@@ -4,14 +4,14 @@
 :root {
   --ink: oklch(96% 0 0);
   --ink-dim: oklch(80% 0 0);
-  --line: rgba(255, 255, 255, 0.18);
-  --tint: rgba(255, 255, 255, 0.1);
   --card: rgba(12, 13, 15, 0.62);
-  --card-solid: rgba(12, 13, 15, 0.9);
   --accent: oklch(80% 0.1 240);
   --sand: oklch(82% 0.06 240);
-  --sand-lift: oklch(88% 0.05 240);
-  --on-sand: oklch(24% 0.03 240);
+  --line: color-mix(in oklab, var(--ink) 18%, transparent);
+  --tint: color-mix(in oklab, var(--ink) 10%, transparent);
+  --card-solid: rgb(from var(--card) r g b / 0.9);
+  --sand-lift: oklch(from var(--sand) calc(l + 0.055) calc(c * 0.8) h);
+  --on-sand: oklch(from var(--sand) 0.24 calc(c * 0.5) h);
   --bg: oklch(16% 0 0);
   --focus-pos: 50% 50%;
   --scrim:
