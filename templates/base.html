@@ -192,6 +192,7 @@ html[data-theme="{{ shot.id }}"] .credit[data-for="{{ shot.id }}"] { display: bl
 <meta property="og:image" content="{{ <floreal.fallback shot={backdrop} /> }}">
 {%- endif %}
 {%- block head_extra %}{% endblock %}
+{%- include "extend/head.html" %}
 </head>
 <body{% if is_landing %} class="landing"{% endif %}>
 <a class="skip-link" href="#content">{{ <floreal.t key="skip_to_content" /> }}</a>
@@ -211,6 +212,7 @@ html[data-theme="{{ shot.id }}"] .credit[data-for="{{ shot.id }}"] { display: bl
 {% include "partials/footer.html" -%}
 
 <script src="{{ get_url(path="floreal.js", cachebust=true) | safe }}" defer></script>
+{%- include "extend/body_end.html" %}
 
 </body>
 </html>

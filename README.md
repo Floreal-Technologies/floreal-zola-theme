@@ -391,6 +391,7 @@ Every page also does this:
 | `partials/pager.html` | The newer and older links under a list of more than one page |
 | `partials/backdrop.html` | The backdrop, and the list that the script switches it from |
 | `partials/footer.html` | The friends, and the credit line |
+| `extend/head.html`, `extend/body_end.html` | Nothing. A site writes its own. See "Adding to every page" |
 
 The components in `components.html`:
 
@@ -439,6 +440,13 @@ order:
 
 Zola compiles them into one file, `/floreal.css`. The rules of a component stay
 in the file of that component.
+
+## Add something to every page
+
+```html
+{#- templates/extend/head.html -#}
+<link rel="stylesheet" href="{{ get_url(path="site.css", cachebust=true) | safe }}">
+```
 
 ## The landing page
 
