@@ -7,8 +7,7 @@ buttons. `make-showcase.sh` builds this image from the two screenshots.
 
 ## Installing
 
-The theme needs Zola 0.23.0 or later. The templates use Tera 2, which came with
-Zola 0.23. They do not run on Zola 0.22.
+The theme needs Zola 0.23.6 or later.
 
 1. Add the theme as a submodule:
 

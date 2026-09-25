@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    name: Zola ${{ matrix.zola }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # The oldest release the theme supports (min_version in theme.toml),
+        # and the newest, so a breaking Zola release shows up before a site
+        # hits it. The newest is allowed to fail.
+        zola: ["0.23.6", "latest"]
+    continue-on-error: ${{ matrix.zola == 'latest' }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install Zola
+        env:
+          ZOLA: ${{ matrix.zola }}
+        run: |
+          if [ "$ZOLA" = latest ]; then
+            ZOLA=$(curl -sSfLI -o /dev/null -w '%{url_effective}' \
+              https://github.com/getzola/zola/releases/latest | sed 's|.*/v||')
+          fi
+          mkdir -p "$RUNNER_TEMP/zola"
+          curl -sSfL "https://github.com/getzola/zola/releases/download/v$ZOLA/zola-v$ZOLA-x86_64-unknown-linux-gnu.tar.gz" \
+            | tar -xz -C "$RUNNER_TEMP/zola"
+          echo "$RUNNER_TEMP/zola" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/zola/zola" --version
+
+      # The demo site at the repository root builds against the theme through
+      # the themes/floreal symlink.
+      - name: Build
+        run: zola build
+
+      # Internal links and anchors only: the demo links to example.com.
+      - name: Check links
+        run: zola check --skip-external-links
