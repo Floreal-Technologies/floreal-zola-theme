@@ -1,9 +1,3 @@
-{#- The backdrop of this page: the one named by `default_backdrop`, or the
-    first of the list. The named one is put in front of the list, and the first
-    of that is taken.
-
-    With no backdrop configured this is `false`, and the palette, the switcher
-    and the image are left out. -#}
 {%- set_global named = [shot for shot in config.extra.backdrops if shot.id == config.extra.default_backdrop] -%}
 {%- set_global choices = [...named, ...config.extra.backdrops] -%}
 {%- set_global backdrop = false -%}
@@ -19,12 +13,7 @@
 {%- endif -%}
 {#- The landing page of this language. Zola knows where it is. -#}
 {%- set_global home_url = get_url(path="", lang=lang, trailing_slash=true) -%}
-{#- The languages that the nav offers: the language of the site first, then
-    the rest in alphabetical order.
 
-    Zola leaves the language of this page out of `config.languages`, so that
-    language is added back, and the rest have no fixed order, so they are
-    sorted. A site with its own order writes `extra.language_order`. -#}
 {%- set_global lang_codes = config.extra.language_order or [] -%}
 {%- if lang_codes | length == 0 -%}
   {%- set_global other_langs = [code for code, options in config.languages if code != config.default_language] -%}
@@ -171,11 +160,33 @@ html[data-theme="{{ shot.id }}"] .credit[data-for="{{ shot.id }}"] { display: bl
 {%- endfor %}
 </style>
 {%- endif %}
+
+{%- set_global is_article = page is defined and page.date %}
+<meta property="og:site_name" content="{{ config.title }}">
 <meta property="og:title" content="{{ meta_title }}">
 <meta property="og:description" content="{{ meta_description }}">
-<meta property="og:type" content="website">
+<meta property="og:locale" content="{{ lang | replace(from="-", to="_") }}">
+{%- for other in translations %}
+{%- if other.lang != lang %}
+<meta property="og:locale:alternate" content="{{ other.lang | replace(from="-", to="_") }}">
+{%- endif %}
+{%- endfor %}
 {%- if current_url is defined %}
 <meta property="og:url" content="{{ current_url | safe }}">
+{%- endif %}
+{%- if is_article %}
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="{{ page.date }}">
+{%- if page.updated %}
+<meta property="article:modified_time" content="{{ page.updated }}">
+{%- endif %}
+{%- for kind, terms in page.taxonomies %}
+{%- for term in terms %}
+<meta property="article:tag" content="{{ term }}">
+{%- endfor %}
+{%- endfor %}
+{%- else %}
+<meta property="og:type" content="website">
 {%- endif %}
 {%- if backdrop %}
 <meta property="og:image" content="{{ <floreal.fallback shot={backdrop} /> }}">
