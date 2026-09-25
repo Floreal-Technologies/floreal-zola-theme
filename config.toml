@@ -1,10 +1,3 @@
-# The demo site the theme serves to itself: `zola serve` at the repo root builds it.
-# No second repository needed to preview a template change.
-# A real site writes its own config.toml and puts the theme under themes/floreal/ (see README).
-#
-# Almost everything the theme reads has a default in theme.toml, so what follows
-# is what this demo chooses, not what a site must write. No photograph is kept in
-# this repository, so the demo is read against the palette of :root.
 base_url = "https://example.org"
 title = "Floréal"
 description = "A house front, and the notes it keeps."
@@ -19,8 +12,6 @@ taxonomies = [
   { name = "categories", feed = true },
 ]
 
-# The colours of a code block. The theme links the file this writes, and keeps
-# the ground under the colours, so the backdrop goes on tinting it.
 [markdown.highlighting]
 theme = "catppuccin-mocha"
 style = "class"
@@ -40,8 +31,6 @@ taxonomies = [
 name = "A House We Keep Company With"
 url = "https://example.com"
 
-# The pages linked from the header. A path is read against the reader's own
-# landing page, so `blog/` is the French blog for a French reader.
 [[extra.nav]]
 path = "about/"
 
@@ -54,9 +43,6 @@ path = "tags/"
 [[extra.nav]]
 path = "categories/"
 
-# What things are called, per language: a header nav entry by its path, a
-# taxonomy by its name, a backdrop by its id. A key named nowhere here is
-# written out as it stands: "blog" becomes "Blog".
 [extra.labels.en]
 about = "About"
 blog = "Blog"
@@ -69,8 +55,6 @@ blog = "Journal"
 tags = "Étiquettes"
 categories = "Catégories"
 
-# The theme's own words in French. English ships with the theme, so only the
-# second language is written here, and only the words that differ.
 [extra.strings.fr]
 home_label = "Accueil"
 breadcrumb_nav = "Fil d'Ariane"
