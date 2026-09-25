@@ -21,12 +21,11 @@
   text-shadow: var(--title-glow);
 }
 
-.article-row h2 a { color: var(--ink); }
-
 /* The one way in a card or an article row offers: underlined only under the
    pointer, so a list of them reads as a list and not as a page of links. */
 .card h2 a,
 .article-row h2 a {
+  color: var(--ink);
   text-decoration: underline;
   text-decoration-color: transparent;
   text-underline-offset: 4px;

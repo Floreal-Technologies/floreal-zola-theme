@@ -5,9 +5,9 @@
    it, and the way the block behaves when a line runs past the column. */
 pre {
   margin: 1.5rem 0;
-  border: 1px solid var(--code-line);
-  border-radius: 14px;
-  background: var(--code-bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card-solid);
   box-shadow: var(--panel-shadow);
   /* A long line scrolls the block, not the page. The padding is on the code
      inside, so the right-hand air survives the scroll. */
@@ -21,14 +21,14 @@ pre {
 
 /* The bar shows itself when the pointer is on the block, and takes the colour
    of the line around it. */
-pre:hover { scrollbar-color: var(--code-line) transparent; }
+pre:hover { scrollbar-color: var(--line) transparent; }
 pre::-webkit-scrollbar { height: 6px; }
 pre::-webkit-scrollbar-thumb { background: transparent; border-radius: 999px; }
-pre:hover::-webkit-scrollbar-thumb { background: var(--code-line); }
+pre:hover::-webkit-scrollbar-thumb { background: var(--line); }
 
 /* One class and one element, so the ground is the theme's and not the one
    `.z-code` carries. */
-pre.giallo { background: var(--code-bg); }
+pre.giallo { background: var(--card-solid); }
 
 pre > code {
   display: block;

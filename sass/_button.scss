@@ -19,7 +19,7 @@
 
 .btn:hover, .btn:focus-visible {
   background: var(--tint);
-  border-color: vars.$line-lift;
+  border-color: var(--line-lift);
 }
 
 .btn-primary {

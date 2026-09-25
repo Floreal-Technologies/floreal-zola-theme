@@ -1,18 +1,13 @@
 @use "vars";
 
-/* Every transition of the theme, named once, so that a rule added later is
-   held by this one too. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0.01ms !important; }
 }
 
-/* The header bar and a card are the same panel, so they give up the same blur. */
 @media (prefers-reduced-transparency: reduce) {
-  .card, .brand { backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--card-solid); }
   .menu ul { background: var(--bg); }
 }
 
-/* Narrower than the column: the trigger keeps its glyph and gives up its word. */
 @media (max-width: vars.$column) {
   .menu-label {
     position: absolute;

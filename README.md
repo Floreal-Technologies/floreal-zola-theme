@@ -620,11 +620,11 @@ theme:
    `ink`, `ink-dim`, `line`, `tint`, `card`, `card-solid`, `accent`,
    `sand`, `sand-lift`, `on-sand`, `bg`, `focus-pos`, `scrim`, `text-glow`,
    `title-glow`, `panel-shadow`, `focus-ring`, `measure`, `backdrop-blur`,
-   `code-bg`, `code-line`, `mono`.
+   `radius`, `line-lift`, `mono`.
    Each key becomes a CSS variable for that backdrop. With no palette, the
    theme uses the default in `themes/floreal/sass/_tokens.scss`.
    The following keys are derived:
-   * `line`, `tint` from `ink`;
+   * `line`, `tint`, `line-lift` from `ink`;
    * `card-solid` from `card`;
    * `sand-lift`, `on-sand` from `sand`.
 
