@@ -620,9 +620,9 @@ theme:
    backdrop gets no credit.
 4. Add `[extra.backdrops.palette]` in the same block, with any of these keys:
    `ink`, `ink-dim`, `line`, `tint`, `card`, `card-solid`, `accent`,
-   `sand`, `sand-lift`, `on-sand`, `bg`, `focus-pos`, `scrim`, `text-glow`,
-   `title-glow`, `panel-shadow`, `focus-ring`, `measure`, `backdrop-blur`,
-   `radius`, `line-lift`, `mono`.
+   `sand`, `sand-lift`, `on-sand`, `bg`, `color-scheme`, `focus-pos`, `scrim`,
+   `text-glow`, `title-glow`, `panel-shadow`, `focus-ring`, `measure`,
+   `backdrop-blur`, `radius`, `line-lift`, `mono`.
    Each key becomes a CSS variable for that backdrop. With no palette, the
    theme uses the default in `themes/floreal/sass/_tokens.scss`.
    The following keys are derived:
@@ -632,8 +632,9 @@ theme:
 
 A credit shows only when its backdrop is active.
 
-A bright image needs the last six keys. `text-glow` and `title-glow` are the
-shadows that hold the words off the image.
+A bright image needs its own `scrim`, `text-glow`, `title-glow` and
+`panel-shadow`. `text-glow` and `title-glow` are the shadows that hold the
+words off the image. With dark ink, it also needs `color-scheme = "light"`.
 
 `backdrop-blur` is how much the theme softens the image on a page that the
 reader reads. `backdrop-blur: 0` leaves the image sharp.
