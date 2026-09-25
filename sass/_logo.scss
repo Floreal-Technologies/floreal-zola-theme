@@ -1,7 +1,7 @@
 .logo { object-fit: contain; }
 
 span.logo {
-  background-color: var(--logo, var(--accent));
+  background-color: var(--sand);
   -webkit-mask: var(--logo-src) center / contain no-repeat;
           mask: var(--logo-src) center / contain no-repeat;
   transition: background-color 0.3s ease;

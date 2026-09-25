@@ -78,8 +78,8 @@ The `<title>` of a page comes from one of these:
 It also puts a larger copy over the line of the landing card.
 
 With `logo_tint = true`, the theme uses only the shape of the file. It paints
-the shape with the `logo` key of the palette of the backdrop, or with its
-`accent` if the palette has no `logo`.
+the shape with the `sand` key of the palette of the backdrop, the colour of
+the primary button.
 
 With `logo_tint = false`, the file shows with its own colours.
 
@@ -88,7 +88,7 @@ With `logo_tint = false`, the file shows with its own colours.
 logo = "img/logo.svg"
 
 [extra.backdrops.palette]
-logo = "#c87a4b"
+sand = "#c87a4b"
 ```
 
 ### Languages
@@ -617,7 +617,7 @@ theme:
    Both are optional. With no label the button shows the id. With no line the
    backdrop gets no credit.
 4. Add `[extra.backdrops.palette]` in the same block, with any of these keys:
-   `ink`, `ink-dim`, `line`, `tint`, `card`, `card-solid`, `accent`, `logo`,
+   `ink`, `ink-dim`, `line`, `tint`, `card`, `card-solid`, `accent`,
    `sand`, `sand-lift`, `on-sand`, `bg`, `focus-pos`, `scrim`, `text-glow`,
    `title-glow`, `panel-shadow`, `focus-ring`, `measure`, `backdrop-blur`,
    `code-bg`, `code-line`, `mono`.
