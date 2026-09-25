@@ -40,6 +40,7 @@ integrity = "sha384-Vb3imj2Dz+GDKt+QWPv0OfksiGXnqOAruRF7Uxdw0WEejuoPzDt8+AjL9Jzm
 # part-translated language still reads correctly.
 [extra.strings.en]
 home_label = "Home"
+skip_to_content = "Skip to content"
 breadcrumb_nav = "Breadcrumb"
 language_nav = "Language"
 background_nav = "Background"

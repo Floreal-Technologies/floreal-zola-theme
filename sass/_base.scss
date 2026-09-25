@@ -52,6 +52,23 @@ body:not(.landing) .backdrop::after {
   padding: clamp(2.5rem, 8vh, 5rem) 1rem 2rem;
 }
 
+.visually-hidden { @include vars.visually-hidden; }
+
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 10;
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  background: var(--sand);
+  color: var(--on-sand);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.skip-link:not(:focus) { @include vars.visually-hidden; }
+
 a { color: var(--accent); }
 a:focus-visible { outline: var(--focus-ring); outline-offset: 3px; border-radius: 4px; }
 

@@ -183,6 +183,7 @@ html[data-theme="{{ shot.id }}"] .credit[data-for="{{ shot.id }}"] { display: bl
 {%- block head_extra %}{% endblock %}
 </head>
 <body{% if is_landing %} class="landing"{% endif %}>
+<a class="skip-link" href="#content">{{ <floreal.t key="skip_to_content" /> }}</a>
 
 {% if backdrop %}{% include "partials/backdrop.html" %}{% endif -%}
 
@@ -191,7 +192,9 @@ html[data-theme="{{ shot.id }}"] .credit[data-for="{{ shot.id }}"] { display: bl
 {%- if not brand_is_title %}
 {%- include "partials/crumbs.html" %}
 {%- endif %}
+<div id="content">
 {%- block main %}{% endblock %}
+</div>
 </main>
 
 {% include "partials/footer.html" -%}

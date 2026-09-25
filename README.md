@@ -182,6 +182,7 @@ part-translated language still reads correctly.
 | Key | Where it is read |
 | --- | --- |
 | `home_label` | The first breadcrumb |
+| `skip_to_content` | The link past the header bar, shown when the keyboard reaches it |
 | `breadcrumb_nav` | The name of the breadcrumbs, for a screen reader |
 | `language_nav` | The name of the language nav, for a screen reader |
 | `background_nav` | The name of the backdrop switcher, for a screen reader |
@@ -283,6 +284,7 @@ path = "Photo de <a href=\"https://example.com\">Quelqu'un d'autre</a>"
 
 [extra.strings.fr]
 home_label = "Accueil"
+skip_to_content = "Aller au contenu"
 breadcrumb_nav = "Fil d'Ariane"
 language_nav = "Langue"
 background_nav = "Arrière-plan"

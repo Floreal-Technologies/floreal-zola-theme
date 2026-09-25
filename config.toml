@@ -57,6 +57,7 @@ categories = "Catégories"
 
 [extra.strings.fr]
 home_label = "Accueil"
+skip_to_content = "Aller au contenu"
 breadcrumb_nav = "Fil d'Ariane"
 language_nav = "Langue"
 background_nav = "Arrière-plan"
