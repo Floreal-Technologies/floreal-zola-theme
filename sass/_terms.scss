@@ -1,7 +1,7 @@
 /* Every term of one taxonomy, with the number of articles under each. The
    taxonomy list page shows nothing else. */
 .terms {
-  margin-top: clamp(2rem, 6vh, 3rem);
+  margin: clamp(2rem, 6vh, 3rem) 0 1em;
   padding: 0;
   list-style: none;
   display: flex;

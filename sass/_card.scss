@@ -30,7 +30,7 @@
   text-transform: uppercase;
 }
 
-.card p { color: var(--ink-dim); }
+.card p { margin: 1em 0; color: var(--ink-dim); }
 .card p strong { color: var(--ink); font-weight: 600; }
 
 .card-hero {

@@ -1,3 +1,4 @@
+@use "reset";
 @use "tokens";
 @use "base";
 @use "header";
@@ -6,6 +7,7 @@
 @use "crumbs";
 @use "prose";
 @use "code";
+@use "table";
 @use "card";
 @use "article";
 @use "terms";

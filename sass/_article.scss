@@ -36,6 +36,7 @@
 .article-row h2 a:hover { text-decoration-color: var(--accent); }
 
 .article-row > p:not(.meta):not(.pills) {
+  margin: 1em 0;
   color: var(--ink-dim);
   max-width: var(--measure);
   text-shadow: var(--text-glow);

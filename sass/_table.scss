@@ -1,0 +1,31 @@
+.prose table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card-solid);
+  box-shadow: var(--panel-shadow);
+  font-size: 0.9375em;
+  font-variant-numeric: tabular-nums;
+  text-shadow: none;
+}
+
+.prose th,
+.prose td {
+  padding: 0.55rem 0.9rem;
+  border-bottom: 1px solid var(--line);
+  text-align: start;
+  vertical-align: top;
+}
+
+.prose th {
+  background: var(--tint);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.prose tr:last-child > td { border-bottom: 0; }

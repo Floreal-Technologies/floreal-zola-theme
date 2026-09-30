@@ -2,6 +2,13 @@
 
 * { box-sizing: border-box; }
 
+em, i, cite, dfn, var, address { font-style: italic; }
+strong, b, th { font-weight: bold; }
+code, kbd, samp, tt, pre { font-family: var(--mono); }
+small, sub, sup { font-size: smaller; }
+sub { vertical-align: sub; }
+sup { vertical-align: super; }
+
 html {
   -webkit-text-size-adjust: 100%;
   color-scheme: var(--color-scheme);

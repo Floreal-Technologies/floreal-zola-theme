@@ -430,15 +430,12 @@ they read `paginator`. Each one lists what it expects at the top.
 `themes/floreal/sass/floreal.scss` lists the stylesheet parts, in cascade
 order:
 
-- `_vars`: The width of the column, the panel of a raised surface, and the box
-  of a control. None can be a custom property: a media query cannot read one.
+- `_reset`: Eric Meyer's CSS reset, v2.0.
+- `_vars`: Column width, panels, and control boxes.
 - `_tokens`: The palette of each backdrop.
-- `_base`: The page, its links, and its two paragraph styles.
+- `_base`: The page, its links, and paragraph styles.
 - One file per component: `_header`, `_menu`, `_crumbs`, `_prose`, `_code`,
-  `_card`, `_article`, `_terms`, `_button`, `_footer`, `_media`.
-
-Zola compiles them into one file, `/floreal.css`. The rules of a component stay
-in the file of that component.
+  `_table`, `_card`, `_article`, `_terms`, `_button`, `_footer`, `_media`.
 
 ## Add something to every page
 
