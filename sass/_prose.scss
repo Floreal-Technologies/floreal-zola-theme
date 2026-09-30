@@ -53,7 +53,8 @@ html[data-justif] .item .prose p {
 .item .actions,
 .standalone .actions { padding-top: 2rem; }
 
-.prose img {
+.prose img,
+.prose video {
   max-width: 100%;
   height: auto;
   border-radius: var(--radius);
