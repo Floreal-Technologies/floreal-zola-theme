@@ -54,6 +54,7 @@ html[data-justif] .item .prose p {
 .standalone .actions { padding-top: 2rem; }
 
 .prose img {
+  max-width: 100%;
   height: auto;
   border-radius: var(--radius);
 }
