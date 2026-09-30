@@ -1,33 +1,23 @@
 @use "vars";
 
-/* A block of code is the panel a card is. The colours inside it are the
-   highlighter's; what is here is the ground they are read on, the line around
-   it, and the way the block behaves when a line runs past the column. */
 pre {
   margin: 1.5rem 0;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--card-solid);
   box-shadow: var(--panel-shadow);
-  /* A long line scrolls the block, not the page. The padding is on the code
-     inside, so the right-hand air survives the scroll. */
   overflow-x: auto;
   overscroll-behavior-x: contain;
-  /* The glow that holds prose off a photograph smears a monospace grid. */
   text-shadow: none;
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
 }
 
-/* The bar shows itself when the pointer is on the block, and takes the colour
-   of the line around it. */
 pre:hover { scrollbar-color: var(--line) transparent; }
 pre::-webkit-scrollbar { height: 6px; }
 pre::-webkit-scrollbar-thumb { background: transparent; border-radius: 999px; }
 pre:hover::-webkit-scrollbar-thumb { background: var(--line); }
 
-/* One class and one element, so the ground is the theme's and not the one
-   `.z-code` carries. */
 pre.giallo { background: var(--card-solid); }
 
 pre > code {
@@ -39,9 +29,12 @@ pre > code {
   tab-size: 4;
 }
 
-/* A line of a numbered block, and the number in front of it. The line takes
-   the full width, so a highlighted one is coloured across the block and not up
-   to its last word. */
+pre > code[data-name]::before {
+    content: attr(data-name);
+    float: right;
+    color: #888;
+}
+
 .giallo-l {
   display: inline-block;
   min-height: 1lh;
