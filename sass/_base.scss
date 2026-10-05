@@ -42,9 +42,8 @@ body {
 /* Held at 0 while the next backdrop decodes. */
 .backdrop.swapping img { opacity: 0; }
 
-body:not(.landing) .backdrop::after {
-  backdrop-filter: blur(var(--backdrop-blur));
-  -webkit-backdrop-filter: blur(var(--backdrop-blur));
+body:not(.landing) .backdrop picture {
+  filter: blur(var(--backdrop-blur));
 }
 
 .backdrop::after {
