@@ -3,7 +3,7 @@
 pre {
   margin: 1.5rem 0;
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: .125rem;
   background: var(--card-solid);
   box-shadow: var(--panel-shadow);
   overflow-x: auto;
@@ -15,7 +15,7 @@ pre {
 
 pre:hover { scrollbar-color: var(--line) transparent; }
 pre::-webkit-scrollbar { height: 6px; }
-pre::-webkit-scrollbar-thumb { background: transparent; border-radius: 999px; }
+pre::-webkit-scrollbar-thumb { background: transparent; border-radius: .125rem; }
 pre:hover::-webkit-scrollbar-thumb { background: var(--line); }
 
 pre.giallo { background: var(--card-solid); }

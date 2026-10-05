@@ -27,6 +27,6 @@ $column: 46rem;
 
 @mixin control {
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: .125rem;
   transition: background-color 0.15s ease, border-color 0.15s ease;
 }
