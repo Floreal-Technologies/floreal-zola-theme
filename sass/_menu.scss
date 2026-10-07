@@ -36,23 +36,11 @@
 
 .menu-toggle[aria-expanded="true"]::after { transform: translateY(0.1em) rotate(-135deg); }
 
-/* A glyph on a trigger, painted as a mask so that it takes the colour of the
-   text around it, and with it the palette of each backdrop. */
-.menu-icon {
+.menu-toggle .icon {
   flex: none;
   width: 1.15em;
   height: 1.15em;
-  background: currentColor;
-  -webkit-mask: var(--icon) no-repeat center / contain;
-  mask: var(--icon) no-repeat center / contain;
 }
-
-/* The two glyphs a trigger can carry. Each one is a file under `static/icons/`,
-   named here by a URL relative to this stylesheet, which sits beside that
-   folder: a site served from a sub-path therefore finds them too. Each is drawn
-   as a mask over `currentColor`, so the colour inside the file is never seen. */
-.i-palette { --icon: url("icons/palette.svg"); }
-.i-languages { --icon: url("icons/languages.svg"); }
 
 .menu ul {
   position: absolute;

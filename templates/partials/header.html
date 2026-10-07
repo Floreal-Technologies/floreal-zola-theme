@@ -32,7 +32,7 @@
     {%- if backdrop %}
     <nav class="menu themes" aria-label="{{ <floreal.t key="background_nav" /> }}">
       <button type="button" class="menu-toggle" aria-haspopup="menu" aria-expanded="false" aria-controls="themes-menu">
-        <span class="menu-icon i-palette" aria-hidden="true"></span>
+        {{ <floreal.icon name="cil-color-palette" /> }}
         <span class="menu-label">{{ <floreal.label key={backdrop.id} /> }}</span>
       </button>
       <ul id="themes-menu" role="menu" hidden>
@@ -47,7 +47,7 @@
     {%- if lang_codes | length > 1 %}
     <nav class="menu langs" aria-label="{{ <floreal.t key="language_nav" /> }}">
       <button type="button" class="menu-toggle" aria-haspopup="menu" aria-expanded="false" aria-controls="langs-menu">
-        <span class="menu-icon i-languages" aria-hidden="true"></span>
+        {{ <floreal.icon name="cil-language" /> }}
         <span class="menu-label">{{ <floreal.lang_label code={lang} /> }}</span>
       </button>
       <ul id="langs-menu" role="menu" hidden>

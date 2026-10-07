@@ -58,6 +58,7 @@ The `<title>` of a page comes from one of these:
 | `date_format` | string | The format of a date on the page, in the syntax of the Zola `date` filter |
 | `meta_taxonomy` | string | The taxonomy shown beside the date of an article. The default is `categories`. Every other taxonomy shows as terms under the article |
 | `justif` | table | Justified article paragraphs, broken by [justif](https://github.com/lyallcooper/justif). Off by default. See "Justified text" |
+| `icons` | table | How `floreal.icon` draws a glyph: `mode = "inline"` or `mode = "sprite"`. The default is `inline`. See "Adding an icon" |
 
 ### A backdrop
 
@@ -333,7 +334,7 @@ height = 1707
 | `content/about.md` | A standalone page, reached from the header bar. See "Adding a standalone page" |
 | `content/items/` | One file per item, per language, and the section that lists them. The name of the section is the site's own: `products/`, `work/`, anything |
 | `content/blog/` | One file per article, per language, and the section that lists and paginates them |
-| `themes/floreal/` | The theme: `theme.toml`, `templates/`, `sass/`, `static/floreal.js`, `static/icons/` |
+| `themes/floreal/` | The theme: `theme.toml`, `templates/`, `sass/`, `static/floreal.js`, `static/icons/coreui/` |
 | `static/` | The files of the site: the backdrop images, the licenses, `CNAME` |
 
 Files that end in `.fr.md` are the French versions. `content/_index.md` serves
@@ -406,6 +407,7 @@ The components in `components.html`:
 | `floreal.lang_url`, `floreal.lang_label` | One page and one language in the nav |
 | `floreal.nav_key`, `floreal.nav_url` | The label key and the target of one header nav entry |
 | `floreal.feed_links` | The feeds of one thing |
+| `floreal.icon` | One glyph of the CoreUI free set. See "Adding an icon" |
 
 Every URL that the templates write is a full URL, from `get_url()`, or from
 `get_taxonomy_url()` in `floreal.pills`.
@@ -434,8 +436,9 @@ order:
 - `_vars`: Column width, panels, and control boxes.
 - `_tokens`: The palette of each backdrop.
 - `_base`: The page, its links, and paragraph styles.
-- One file per component: `_header`, `_menu`, `_crumbs`, `_prose`, `_code`,
-  `_table`, `_card`, `_article`, `_terms`, `_button`, `_footer`, `_media`.
+- One file per component: `_header`, `_menu`, `_icon`, `_crumbs`, `_prose`,
+  `_code`, `_table`, `_card`, `_article`, `_terms`, `_button`, `_footer`,
+  `_media`.
 
 ## Add something to every page
 
@@ -650,6 +653,26 @@ The browser keeps the choice of the reader under `floreal-theme`. A script in
 the page head reads it before the first paint.
 
 An unlisted id is ignored.
+
+## Adding an icon
+
+The theme ships the free set of [CoreUI Icons](https://coreui.io/icons/).
+The sprite file lives at `themes/floreal/static/icons/coreui/free.svg`.
+
+Write the id in a page or in a template:
+
+```
+{{ <floreal.icon name="cil-user" /> }}
+```
+
+`[extra.icons]` sets `mode`, which selects how the glyph reaches the page:
+
+| Mode | What it does |
+| --- | --- |
+| `inline` | The default. The theme cuts the symbol out of the sprite and writes it into the page. |
+| `sprite` | The theme writes a `<use>` that points into the sprite file. |
+
+The glyphs are CC BY 4.0.
 
 ## The demo site
 
