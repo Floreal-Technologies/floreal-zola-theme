@@ -194,3 +194,24 @@
   {{ <floreal.pills page={article} kinds={pill_kinds} /> }}
 </article>
 {%- endcomponent floreal.article_row %}
+
+{% component floreal.icon(name: string, label: string = "", @config) -%}
+{%- set sprite = load_data(path="icons/coreui/free.svg", format="plain") -%}
+{%- set parts = sprite | split(pat='<symbol id="' ~ name ~ '"') -%}
+{%- if parts | length != 2 -%}
+  {{- throw(message="floreal.icon: no glyph named `" ~ name ~ "` in icons/coreui/free.svg") -}}
+{%- endif -%}
+{%- set mode = config.extra?.icons?.mode or "inline" -%}
+{%- if mode != "inline" and mode != "sprite" -%}
+  {{- throw(message="extra.icons.mode is `" ~ mode ~ "`: write `inline` or `sprite`") -}}
+{%- endif -%}
+<span class="icon"{% if label %} role="img" aria-label="{{ label }}"{% else %} aria-hidden="true"{% endif %}>
+{%- if mode == "sprite" -%}
+<svg><use href="{{ get_url(path="icons/coreui/free.svg") | safe }}#{{ name }}"/></svg>
+{%- else -%}
+{#- After the id come ` viewBox="…">` and the paths, up to `</symbol>`. -#}
+{%- set body = parts[1] | split(pat="</symbol>") -%}
+<svg xmlns="http://www.w3.org/2000/svg"{{ body[0] | trim_end | safe }}</svg>
+{%- endif -%}
+</span>
+{%- endcomponent floreal.icon %}
