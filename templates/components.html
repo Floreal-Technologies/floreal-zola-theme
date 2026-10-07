@@ -196,10 +196,19 @@
 {%- endcomponent floreal.article_row %}
 
 {% component floreal.icon(name: string, label: string = "", @config) -%}
-{%- set sprite = load_data(path="icons/coreui/free.svg", format="plain") -%}
+{#- The prefix of the id names the sprite: `cil-` is the free set, `cib-` the brands. -#}
+{%- set prefix = name | split(pat="-") | first -%}
+{%- if prefix == "cil" -%}
+  {%- set file = "icons/coreui/free.svg" -%}
+{%- elif prefix == "cib" -%}
+  {%- set file = "icons/coreui/brand.svg" -%}
+{%- else -%}
+  {{- throw(message="floreal.icon: `" ~ name ~ "` starts with neither `cil-` nor `cib-`") -}}
+{%- endif -%}
+{%- set sprite = load_data(path=file, format="plain") -%}
 {%- set parts = sprite | split(pat='<symbol id="' ~ name ~ '"') -%}
 {%- if parts | length != 2 -%}
-  {{- throw(message="floreal.icon: no glyph named `" ~ name ~ "` in icons/coreui/free.svg") -}}
+  {{- throw(message="floreal.icon: no glyph named `" ~ name ~ "` in " ~ file) -}}
 {%- endif -%}
 {%- set mode = config.extra?.icons?.mode or "inline" -%}
 {%- if mode != "inline" and mode != "sprite" -%}
@@ -207,7 +216,7 @@
 {%- endif -%}
 <span class="icon"{% if label %} role="img" aria-label="{{ label }}"{% else %} aria-hidden="true"{% endif %}>
 {%- if mode == "sprite" -%}
-<svg><use href="{{ get_url(path="icons/coreui/free.svg") | safe }}#{{ name }}"/></svg>
+<svg><use href="{{ get_url(path=file) | safe }}#{{ name }}"/></svg>
 {%- else -%}
 {#- After the id come ` viewBox="…">` and the paths, up to `</symbol>`. -#}
 {%- set body = parts[1] | split(pat="</symbol>") -%}

@@ -407,7 +407,7 @@ The components in `components.html`:
 | `floreal.lang_url`, `floreal.lang_label` | One page and one language in the nav |
 | `floreal.nav_key`, `floreal.nav_url` | The label key and the target of one header nav entry |
 | `floreal.feed_links` | The feeds of one thing |
-| `floreal.icon` | One glyph of the CoreUI free set. See "Adding an icon" |
+| `floreal.icon` | One glyph of the CoreUI free or brand set. See "Adding an icon" |
 
 Every URL that the templates write is a full URL, from `get_url()`, or from
 `get_taxonomy_url()` in `floreal.pills`.
@@ -656,14 +656,23 @@ An unlisted id is ignored.
 
 ## Adding an icon
 
-The theme ships the free set of [CoreUI Icons](https://coreui.io/icons/).
-The sprite file lives at `themes/floreal/static/icons/coreui/free.svg`.
+The theme ships two sets of [CoreUI Icons](https://coreui.io/icons/), under
+`themes/floreal/static/icons/coreui/`:
 
-Write the id in a page or in a template:
+| Sprite | Prefix | What it holds |
+| --- | --- | --- |
+| `free.svg` | `cil-` | The free set: interface glyphs |
+| `brand.svg` | `cib-` | The brand set: logos of products and projects |
+
+Write the id in a page or in a template. The prefix selects the sprite:
 
 ```
 {{ <floreal.icon name="cil-user" /> }}
+{{ <floreal.icon name="cib-haskell" /> }}
 ```
+
+`scripts/update-coreui-icons.sh` fetches both sprites from the `@coreui/icons`
+package, with its LICENSE and version.
 
 `[extra.icons]` sets `mode`, which selects how the glyph reaches the page:
 
