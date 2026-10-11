@@ -30,7 +30,8 @@ pre > code {
 
 pre > code[data-name]::before {
     content: attr(data-name);
-    float: right;
+    display: block;
+    text-align: right;
     color: #888;
 }
 
