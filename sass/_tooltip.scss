@@ -1,0 +1,101 @@
+@use "vars";
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-word {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  text-shadow: inherit;
+  cursor: help;
+  text-decoration: underline dotted;
+  text-underline-offset: 0.15em;
+}
+
+.tooltip-word:focus-visible { outline: var(--focus-ring); outline-offset: 3px; border-radius: var(--radius); }
+
+.tooltip-box {
+  position: absolute;
+  inset: auto auto 120% 50%;
+  z-index: 2;
+  width: max-content;
+  max-width: 18rem;
+  margin: 0;
+  padding: 0.4rem 0.7rem;
+  overflow: visible;
+  color: var(--ink);
+  font-size: 0.85rem;
+  font-weight: 400;
+  line-height: 1.4;
+  text-align: start;
+  text-shadow: none;
+  opacity: 0;
+  translate: -50% 10px;
+  transition: opacity 0.3s ease, translate 0.3s ease;
+  @include vars.panel;
+}
+
+/* No interest invokers */
+@supports not selector(:interest-source) {
+  .tooltip-box {
+    display: block;
+    pointer-events: none;
+  }
+}
+
+.tooltip:hover .tooltip-box, .tooltip-word:focus-visible + .tooltip-box {
+  opacity: 1;
+  translate: -50% 0;
+}
+
+.tooltip-box:popover-open {
+  opacity: 1;
+  translate: -50% 0;
+}
+
+@starting-style {
+  .tooltip-box:popover-open {
+    opacity: 0;
+    translate: -50% 10px;
+  }
+}
+
+@supports (position-area: top) {
+  .tooltip {
+    position: static;
+    anchor-name: --tooltip;
+    anchor-scope: --tooltip;
+  }
+
+  .tooltip-box {
+    position-anchor: --tooltip;
+    position-area: block-start span-all;
+    position-try-fallbacks: flip-block;
+    justify-self: anchor-center;
+    inset: auto;
+    margin-block: 0.4rem;
+    translate: 0 10px;
+    transition: opacity 0.3s ease, translate 0.3s ease,
+      display 0.3s allow-discrete, overlay 0.3s allow-discrete;
+  }
+
+  .tooltip:hover .tooltip-box, .tooltip-word:focus-visible + .tooltip-box { translate: 0 0; }
+
+  .tooltip-box:popover-open {
+    position: fixed;
+    position-anchor: auto;
+    translate: 0 0;
+  }
+
+  @starting-style {
+    .tooltip-box:popover-open { translate: 0 10px; }
+  }
+}

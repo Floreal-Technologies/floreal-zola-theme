@@ -224,3 +224,11 @@
 {%- endif -%}
 </span>
 {%- endcomponent floreal.icon %}
+
+{% component floreal.tooltip(text: string) -%}
+{%- set id = "tip-" ~ get_hash(literal=body ~ text, sha_type=256, base64=false) | truncate(length=8, end="") -%}
+<span class="tooltip">
+  <button type="button" class="tooltip-word" interestfor="{{ id }}" aria-describedby="{{ id }}">{{ body }}</button>
+  <span class="tooltip-box" id="{{ id }}" popover="hint" role="tooltip">{{ text }}</span>
+</span>
+{%- endcomponent floreal.tooltip %}

@@ -20,9 +20,6 @@ The theme needs Zola 0.23.6 or later.
 That is all. Every key the theme reads has a default in `theme.toml`, and the
 theme strings ship in English.
 
-A site with no `[extra]` table builds and reads correctly. The rest of this
-document gives what a site can change.
-
 ## Configuration
 
 The theme reads these Zola settings: `base_url`, `title`, `description`,
@@ -110,15 +107,11 @@ fr = "Français"
 `language_labels` gives a language a name other than its code in capitals.
 `language_order` fixes the order.
 
-Unset, the language of the site comes first and the rest follow in
-alphabetical order. A site with one language gets no language nav.
-
-Every page carries `dir` on `<html>`, from the Zola `text_direction()`
-function. A right-to-left language reads correctly without more configuration.
-
 ### A friend
 
 `[[extra.friends]]` holds `name` and `url`.
+
+Useful for a webring.
 
 ### A nav entry
 
@@ -343,23 +336,6 @@ Files that end in `.fr.md` are the French versions. `content/_index.md` serves
 This is the layout that a site with the theme writes. The `config.toml` file
 and `content/` directory of this repository are the demo site.
 
-## Pages
-
-| URL | Template | What it is |
-| --- | --- | --- |
-| `/`, `/fr/` | `index.html` | The landing page: the tagline, and one card with the punchline and the links |
-| `/items/`, `/fr/items/` | `section.html` | Every item, as cards |
-| `/items/<name>/` | `page.html` | One item, with its full text |
-| `/blog/`, `/fr/blog/` | `section.html` | The first page of the article list |
-| `/blog/page/<n>/`, `/fr/blog/page/<n>/` | `section.html` | A later page of the same list |
-| `/blog/<article>/` | `page.html` | One article, with its terms and its neighbors |
-| `/about/`, `/fr/about/` | `page.html` | A standalone page, written directly under `content/` |
-| `/tags/`, `/categories/` | `taxonomy_list.html` | Every term of that taxonomy |
-| `/tags/<term>/`, `/categories/<term>/` | `taxonomy_single.html` | The articles under one term |
-
-Zola selects `section.html` and `page.html` when nothing names another
-template. A new section therefore looks like the rest, with no front matter.
-
 Each template reads what its content carries:
 
 - A section shows article rows if its pages have dates, and cards if they do
@@ -381,18 +357,6 @@ Every page also does this:
 
 ## The parts a page is built from
 
-| File | What it shows |
-| --- | --- |
-| `base.html` | The head, and what every page shares: the backdrop, the header bar, the breadcrumbs and the footer. It also resolves the title, the description, the crumbs, the language list and the date format, so no other template does |
-| `components.html` | The components. See the table that follows |
-| `partials/header.html` | The bar across the top: the site name, the pages, the backdrop switcher, the language nav |
-| `partials/crumbs.html` | The breadcrumbs |
-| `partials/article_list.html` | An article list, and the pager under it |
-| `partials/pager.html` | The newer and older links under a list of more than one page |
-| `partials/backdrop.html` | The backdrop, and the list that the script switches it from |
-| `partials/footer.html` | The friends, and the credit line |
-| `extend/head.html`, `extend/body_end.html` | Nothing. A site writes its own. See "Adding to every page" |
-
 The components in `components.html`:
 
 | Component | What it shows |
@@ -408,14 +372,7 @@ The components in `components.html`:
 | `floreal.nav_key`, `floreal.nav_url` | The label key and the target of one header nav entry |
 | `floreal.feed_links` | The feeds of one thing |
 | `floreal.icon` | One glyph of the CoreUI free or brand set. See "Adding an icon" |
-
-Every URL that the templates write is a full URL, from `get_url()`, or from
-`get_taxonomy_url()` in `floreal.pills`.
-
-A part is a component. Tera 2 registers every component in `components.html`
-itself, so a template names `floreal.<part>` and imports nothing.
-
-The `floreal.` prefix separates them from the components of a site.
+| `floreal.tooltip` | One word with a note above it. See "Adding a tooltip" |
 
 A component is called as a tag, such as `{{ <floreal.t key="not_found" /> }}`.
 Write any value other than a plain string in braces, as in `page={article}`.
@@ -432,188 +389,12 @@ they read `paginator`. Each one lists what it expects at the top.
 `themes/floreal/sass/floreal.scss` lists the stylesheet parts, in cascade
 order:
 
-- `_reset`: Eric Meyer's CSS reset, v2.0.
-- `_vars`: Column width, panels, and control boxes.
-- `_tokens`: The palette of each backdrop.
-- `_base`: The page, its links, and paragraph styles.
-- One file per component: `_header`, `_menu`, `_icon`, `_crumbs`, `_prose`,
-  `_code`, `_table`, `_card`, `_article`, `_terms`, `_button`, `_footer`,
-  `_media`.
-
 ## Add something to every page
 
 ```html
 {#- templates/extend/head.html -#}
 <link rel="stylesheet" href="{{ get_url(path="site.css", cachebust=true) | safe }}">
 ```
-
-## The landing page
-
-`/` and `/fr/` show `extra.tagline` from `content/_index.md`.
-
-Under it they show one card: the logo from `extra.logo`, the line that says
-what the software does, and the buttons that lead into the site.
-
-The landing page writes both, in each language.
-
-```toml
-[extra]
-tagline = "A house front, and the notes it keeps."
-
-[extra.hero]
-punchline = "Software that says what it did, and proves it."
-
-[[extra.hero.actions]]
-label = "What we make"
-url = "@/items/_index.md"
-primary = true
-
-[[extra.hero.actions]]
-label = "Read the notes"
-url = "@/blog/_index.md"
-```
-
-| Key | What it does |
-| --- | --- |
-| `tagline` | The line under the site name. A landing page without it gets no line |
-| `hero.punchline` | The line on the card. A landing page with no `[extra.hero]` gets no card |
-| `hero.actions` | The buttons under it, in the order written. The fields are those of an item action: `label`, `url`, `primary`, `where`. A landing page without them gets a card and no buttons |
-
-The `url` of an action reads like the `url` of an item. A full URL stands as
-written.
-
-A value such as `@/items/_index.md`, or a path that starts with `/`, is a
-page of this site. The theme builds the full URL from it.
-
-Use the `@/` form. Zola resolves it to the address of that page and stops the
-build if the file is absent.
-
-The French landing page names its own files, such as `@/blog/_index.fr.md`.
-
-The card shows the actions of an item card. An action with `where = "page"`
-is left out, and so is an action that leads to the landing page.
-
-Sections are not cards. The header bar reaches `/items/`, `/blog/`, `/tags/`
-and `/categories/` through `[[extra.nav]]`.
-
-## Adding a standalone page
-
-A page written directly under `content/`, such as About or a license note,
-belongs to no section and carries no date.
-
-`page.html` shows it as a standalone page.
-
-1. Write `content/about.md` and `content/about.fr.md`, with a `title` and a
-   `description`. The body is the page.
-2. Add the entry to `[[extra.nav]]` and its word to `[extra.labels.<lang>]`:
-
-   ```toml
-   [[extra.nav]]
-   path = "about/"
-
-   [extra.labels.en]
-   about = "About"
-
-   [extra.labels.fr]
-   about = "À propos"
-   ```
-
-`[[extra.actions]]` works here as on an item page. It gives a row of buttons
-under the text.
-
-The row holds the actions with `where = "page"` and the actions with no
-`where`.
-
-The breadcrumbs read Home / this page. A page inside a section names that
-section between the two.
-
-## Adding an item
-
-An item is a page that says what it is: a tool, a service, a book, a record.
-The theme reads `extra.what`, never the path, so the section may carry any
-name. The demo calls it `items/`.
-
-1. If `content/items/_index.md` and `_index.fr.md` do not exist, write them
-   first:
-
-   ```toml
-   +++
-   title = "What we make"
-   sort_by = "title"
-   +++
-   ```
-
-   The pages carry no dates, so the section shows cards. If an item ever
-   carries a date, `extra.layout = "cards"` sets this directly.
-2. Write `content/items/<name>.md` and `content/items/<name>.fr.md`. Two
-   keys are optional:
-   - `extra.what`: The label above the title. It also tells `page.html` that
-     the page is an item.
-   - `[[extra.actions]]`: One entry per button.
-
-   | Key | What it does |
-   | --- | --- |
-   | `label` | The word on the button |
-   | `url` | Where the button leads. A full URL stands as written. A value such as `@/items/<name>.md`, or a path that starts with `/`, is a page of this site, and the theme builds the full URL from it |
-   | `primary` | `true` on the one action for the reader to take. One per row at most |
-   | `where` | The row of the button: `"card"`, `"page"` or `"both"`. A button with no `where` is in both rows |
-
-   `where` separates the two rows. The card holds the link to the item page,
-   and the page holds what the reader does next.
-
-   A button that leads to the page that the reader is on is left out.
-
-   The body is the text of the item page.
-3. Put `<!-- more -->` after the first sentences. The page always shows the
-   full body.
-
-   The card shows only the text above the marker. With no marker it shows the
-   full body.
-
-The item page and its card on `/items/` come from the file alone, and
-`/items/` sorts by title.
-
-The landing page shows no item. It shows one card of its own, with a button
-that leads here.
-
-## Adding an article
-
-1. If `content/blog/_index.md` and `_index.fr.md` do not exist, write them
-   first:
-
-   ```toml
-   +++
-   title = "Blog"
-   sort_by = "date"
-   paginate_by = 5
-   generate_feeds = true
-   +++
-   ```
-
-   The pages carry dates, so the section shows article rows.
-2. Write `content/blog/<name>.md` and `content/blog/<name>.fr.md`. Give each a
-   `date` and a `[taxonomies]` table, such as `tags = ["design"]` and
-   `categories = ["notes"]`. The date makes the page an article.
-3. Put `<!-- more -->` after the first sentences. The text above it is the row
-   on `/blog/`. The article page always shows the full body.
-
-A term needs no declaration other than the `taxonomies` line in `config.toml`.
-
-The first article that names a term gets a page, at `/tags/<term>/` or
-`/categories/<term>/`.
-
-`extra.meta_taxonomy` names the taxonomy shown beside the date of an article.
-The default is `categories`.
-
-Every other taxonomy shows as terms under the article.
-
-Two front matter keys of Zola are useful here. Neither needs anything from the
-theme:
-
-| Key | What it does |
-| --- | --- |
-| `hidden = true` | Keeps the page out of every list: its section, its term pages and the feeds. Zola still builds the page, and a link to it still works |
-| `include_in_feeds = false` | Keeps the page out of the feeds only. The page stays in the lists |
 
 ## Adding a background
 
@@ -637,22 +418,12 @@ theme:
    * `card-solid` from `card`;
    * `sand-lift`, `on-sand` from `sand`.
 
-A credit shows only when its backdrop is active.
-
 A bright image needs its own `scrim`, `text-glow`, `title-glow` and
 `panel-shadow`. `text-glow` and `title-glow` are the shadows that hold the
 words off the image. With dark ink, it also needs `color-scheme = "light"`.
 
-`backdrop-blur` is how much the theme softens the image on a page that the
-reader reads. `backdrop-blur: 0` leaves the image sharp.
-
 `extra.default_backdrop` names the backdrop that the built page ships with.
 A site that names none ships the first backdrop of the list.
-
-The browser keeps the choice of the reader under `floreal-theme`. A script in
-the page head reads it before the first paint.
-
-An unlisted id is ignored.
 
 ## Adding an icon
 
@@ -683,13 +454,13 @@ package, with its LICENSE and version.
 
 The glyphs are CC BY 4.0.
 
-## The demo site
+## Adding a tooltip
 
-The `config.toml` file and `content/` directory at the root of this repository
-are the demo site of the theme, not an example.
+`floreal.tooltip` draws a word with a note above it. The note shows when the
+pointer is over the word, or when the word has the keyboard focus.
 
-`themes/floreal` is a link back to the root, so the demo reads the theme as a
-real site does: through `theme = "floreal"`, with the `theme.toml` defaults.
+The word is the body of the tag. `text` is the note, and stands as written:
 
-Run `zola serve` here to see a change directly. A site with the theme writes
-its own `config.toml` and `content/`, and ignores these.
+```
+{% <floreal.tooltip text="A static site generator, written in Rust."> %}Zola{% </floreal.tooltip> %}
+```

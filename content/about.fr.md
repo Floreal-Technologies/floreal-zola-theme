@@ -11,3 +11,6 @@ aucune section, elle ne porte pas de date, et on y accède depuis la barre
 d'en-tête. Écrivez `content/about.md`, ajoutez son entrée à `[[extra.nav]]`, et
 le thème la dessine avec `page.html`, le gabarit que Zola prend quand rien
 n'en nomme un autre.
+
+Le thème dessine une note au-dessus d'un mot avec `floreal.tooltip`, comme sur
+{% <floreal.tooltip text="Un générateur de site statique, écrit en Rust."> %}Zola{% </floreal.tooltip> %}.
